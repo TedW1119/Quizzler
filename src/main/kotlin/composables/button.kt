@@ -9,8 +9,22 @@ import androidx.compose.runtime.*
 
 @Composable
 @Preview
-fun button(text: String, filled: Boolean, action: () -> Unit) {
+fun button(text: String, filled: Boolean, action: () -> Unit, mod: androidx.compose.ui.Modifier) {
+    MaterialTheme {
+        if (filled) {
+            Button(onClick = action, modifier = mod) {
+                Text(text)
+            }
+        } else {
+            OutlinedButton(onClick = action, modifier = mod) {
+                Text(text)
+            }
+        }
+    }
+}
 
+@Composable
+fun button(text: String, filled: Boolean, action: () -> Unit) {
     MaterialTheme {
         if (filled) {
             Button(onClick = action) {
@@ -22,5 +36,4 @@ fun button(text: String, filled: Boolean, action: () -> Unit) {
             }
         }
     }
-
 }
