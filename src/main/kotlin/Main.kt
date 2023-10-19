@@ -1,8 +1,12 @@
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
-import pages.landing
+import pages.login
+
 fun main() = application {
-    Window(onCloseRequest = ::exitApplication) {
-        landing()
+    Window(
+        title = "APP NAME HERE",
+        onCloseRequest = ::exitApplication
+    ) {
+        login()
     }
 }
