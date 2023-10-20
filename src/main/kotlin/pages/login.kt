@@ -16,7 +16,7 @@ import composables.button
 
 @Composable
 @Preview
-fun login() {
+fun login(changePage: (String) -> Unit) {
 
     // Track the input field values
     var username by remember { mutableStateOf("") }
@@ -24,7 +24,7 @@ fun login() {
 
     // Handle the login button press
     fun handleLogin() {
-
+        changePage("Landing")
     }
 
     // Handle the create new account button press

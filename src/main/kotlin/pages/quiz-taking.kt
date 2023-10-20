@@ -15,8 +15,12 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 @Preview
-fun quizMCQ() {
+fun quizMCQ(changePage: (String) -> Unit) {
     var selectedOption by remember { mutableStateOf(1) }
+
+    fun handleExitQuiz() {
+        changePage("Landing")
+    }
 
     Box(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -73,7 +77,7 @@ fun quizMCQ() {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                Button(onClick = {}) {
+                Button(onClick = { handleExitQuiz() }) {
                     Text("Exit Quiz")
                 }
                 Spacer(modifier = Modifier.width(8.dp))
