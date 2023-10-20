@@ -16,11 +16,17 @@ import composables.settingsOverlay
 
 @Composable
 @Preview
-fun landing() {
-    var username = "Mr. Creeper"
+fun landing(changePage: (String) -> Unit) {
+    val username = "Mr. Creeper"
     var isSidebarVisible by remember { mutableStateOf(false) }
     var isSettingsVisible by remember { mutableStateOf(false) }
 
+    fun handleCreateQuiz() {
+        changePage("QuizCreation")
+    }
+    fun handleTakeQuiz() {
+        changePage("QuizTaking")
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -71,17 +77,17 @@ fun landing() {
 
             // create quiz and view quiz button
             val input = "test input"
-            fun handleSubmit() {
-                println(input)
-            }
+            //fun handleSubmit() {
+            //    println(input)
+            //}
             Row(
                 modifier = Modifier
                     .fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                button("Create a Quiz", true, ::handleSubmit, Modifier.padding(100.dp))
-                button("View my Quizzes", true, ::handleSubmit, Modifier.padding(100.dp))
+                button("Create a Quiz", true, ::handleCreateQuiz, Modifier.padding(100.dp))
+                button("View my Quizzes", true, ::handleTakeQuiz, Modifier.padding(100.dp))
 
             }
         }
