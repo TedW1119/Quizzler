@@ -30,6 +30,15 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "abnormally-distributed"
             packageVersion = "1.0.0"
+            macOS {
+                iconFile.set(project.file("src/main/resources/patrick.icns"))
+            }
+            windows {
+                iconFile.set(project.file("src/main/resources/patrick.icns"))
+            }
+            linux {
+                iconFile.set(project.file("src/main/resources/patrick.icns"))
+            }
         }
     }
 }
