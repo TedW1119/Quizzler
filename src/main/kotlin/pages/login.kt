@@ -28,8 +28,9 @@ fun login(changePage: (String) -> Unit) {
     }
 
     // Handle the create new account button press
-    //fun handleCreateAccount() {
-    //}
+    fun handleCreateAccount() {
+        changePage("AccountCreation")
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -78,10 +79,15 @@ fun login(changePage: (String) -> Unit) {
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "Don't have an account? Click here to create one!",
+            text = "Don't have an account? Click below to create one!",
             style = TextStyle(
                 fontSize = 14.sp
             )
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // TODO: DECIDE WHERE TO PLACE THIS BUTTON
+        button("I need an account this instant since this product is so amazing!", true, ::handleCreateAccount)
     }
 }
