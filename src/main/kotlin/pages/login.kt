@@ -3,16 +3,29 @@ package pages
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.OutlinedTextField
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mongodb.client.model.Filters
+import com.mongodb.kotlin.client.coroutine.MongoClient
 import composables.button
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.runBlocking
+
+// Create data class to represent a MongoDB document
+data class Accounts(val id: Int,
+                    val name: String,
+                    val username: String,
+                    val email: String,
+                    val password: String,
+                    val educationLevel: String,
+                    val profilePicId: String)
 
 @Composable
 @Preview
@@ -25,6 +38,26 @@ fun login(changePage: (String) -> Unit) {
     // Handle the login button press
     fun handleLogin() {
         changePage("Landing")
+    }
+
+    fun mongo() {
+        // Replace the placeholder with your MongoDB deployment's connection string
+        val uri = "mongodb+srv://abnormally:distributed@abnormally-distributed.naumhbd.mongodb.net/?retryWrites=true&w=majority"
+
+        val mongoClient = MongoClient.create(uri)
+        val database = mongoClient.getDatabase("abnormally-distributed")
+        val collection = database.getCollection<Accounts>("accounts")
+
+        runBlocking {
+            val doc = collection.find(Filters.eq("username", "thesnipe")).firstOrNull()
+            if (doc != null) {
+                println(doc)
+            } else {
+                println("No matching documents found.")
+            }
+        }
+
+        mongoClient.close()
     }
 
     // Handle the create new account button press
@@ -75,6 +108,10 @@ fun login(changePage: (String) -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
 
         button("Login", true, ::handleLogin)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        button("Mongo", true, ::mongo)
 
         Spacer(modifier = Modifier.height(24.dp))
 
