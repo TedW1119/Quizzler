@@ -13,13 +13,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import composables.button
+import composables.slider
 
 @Composable
 @Preview
 fun quizCreation(changePage: (String) -> Unit) {
 
+    // Callback for handling cancelling
     fun handleCancel() {
         changePage("Landing")
+    }
+
+    // Callback for handling upload
+    fun handleNext() {
+        changePage("QuizUpload")
     }
 
     // Overall Box
@@ -37,14 +44,16 @@ fun quizCreation(changePage: (String) -> Unit) {
                     .fillMaxWidth()
                     .background(Color.LightGray)
                     .padding(16.dp),
-                horizontalArrangement = Arrangement.Center
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
+                button("Cancel", true, ::handleCancel)
+
                 Text(
                     "Select Your Quizzer Style",
                     fontSize = 32.sp,
                 )
 
-                button("Cancel", true, ::handleCancel)
+                button("Next", true, ::handleNext)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -240,7 +249,9 @@ fun quizCreation(changePage: (String) -> Unit) {
                                 modifier = Modifier
                                     .fillMaxHeight(),
                                 verticalArrangement = Arrangement.Center,
-                            ) {}
+                            ) {
+                                slider()
+                            }
                         }
                     }
                 }
