@@ -12,7 +12,7 @@ internal class SampleTest {
 
     @Test
     fun testSub() {
-        val expected = -5
+        val expected = -6
         assertEquals(expected, testSample.sub(7, 13))
     }
 }
