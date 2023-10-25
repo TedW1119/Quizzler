@@ -19,6 +19,7 @@ fun main() = application {
     ) {
         when (currentPage) {
             "Login" -> login(::changePage)
+            "AccountCreation" -> accountCreation(::changePage)
             "Landing" -> landing(::changePage)
             "QuizCreation" -> quizCreation(::changePage)
             "QuizTaking" -> quizMCQ(::changePage)
