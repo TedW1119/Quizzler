@@ -22,11 +22,7 @@ fun quizMCQ(changePage: (String) -> Unit) {
         changePage("Landing")
     }
 
-    Box(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
+    Column(
             modifier = Modifier.background(Color.White).padding(16.dp),
         ) {
             Row(
@@ -91,7 +87,6 @@ fun quizMCQ(changePage: (String) -> Unit) {
             }
         }
     }
-}
 
 @Composable
 fun radioButtonOption(text: String, selected: Boolean, onSelect: () -> Unit) {
