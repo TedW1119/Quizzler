@@ -8,7 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import com.mongodb.kotlin.client.coroutine.MongoClient
 import composables.button
+import kotlinx.coroutines.runBlocking
 
 // OBJECT: store form data
 object FormData {
@@ -63,10 +65,19 @@ fun accountCreation(changePage: (String) -> Unit) {
 
     // Handle the login button press
     fun handleCreateAccount() {
-        println(formData.name)
-        println(formData.username)
-        println(formData.email)
-        println(formData.password)
+
+        // Replace the placeholder with your MongoDB deployment's connection string
+        val uri = "mongodb+srv://abnormally:distributed@abnormally-distributed.naumhbd.mongodb.net/?retryWrites=true&w=majority"
+
+        val mongoClient = MongoClient.create(uri)
+        val database = mongoClient.getDatabase("abnormally-distributed")
+        val collection = database.getCollection<Accounts>("accounts")
+
+        runBlocking {
+            val result = collection.insertOne(
+                Accounts(2, formData.name, formData.username, formData.email, formData.password, "university", "2")
+            )
+        }
         changePage("Landing")
     }
 
