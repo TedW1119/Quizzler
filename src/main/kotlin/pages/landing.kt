@@ -27,6 +27,9 @@ fun landing(changePage: (String) -> Unit) {
     fun handleTakeQuiz() {
         changePage("QuizTaking")
     }
+    fun handleLogout() {
+        changePage("Login")
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -54,7 +57,7 @@ fun landing(changePage: (String) -> Unit) {
                 .width(150.dp)
         ) {
             if (isSettingsVisible) {
-                settingsOverlay()
+                settingsOverlay(::handleLogout)
             }
         }
 

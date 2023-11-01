@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun settingsOverlay() {
+fun settingsOverlay(handleLogout: () -> Unit) {
     Column(
         modifier = Modifier
             .offset(0.dp, 56.dp)
@@ -23,6 +23,6 @@ fun settingsOverlay() {
         // Note: just text as placeholders for now, they will be buttons in the future
         Text("Profile", Modifier.padding(2.dp), fontSize = 15.sp)
         Text("Settings", Modifier.padding(2.dp), fontSize = 15.sp)
-        Text("Logout", Modifier.padding(2.dp), fontSize = 15.sp)
+        button("Logout", false, handleLogout)
     }
 }
