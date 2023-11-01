@@ -23,6 +23,7 @@ fun main() = application {
             "Landing" -> landing(::changePage)
             "QuizCreation" -> quizCreation(::changePage)
             "QuizTaking" -> quizMCQ(::changePage)
+            "QuizUpload" -> quizUpload(::changePage)
         }
     }
 }
