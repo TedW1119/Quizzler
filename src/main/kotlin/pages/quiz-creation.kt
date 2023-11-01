@@ -12,12 +12,44 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mongodb.kotlin.client.coroutine.MongoClient
 import composables.button
 import composables.slider
+import kotlinx.coroutines.runBlocking
+
+// Create data class to represent a MongoDB document
+data class Settings (val hints: Boolean,
+                     val bonus: Boolean,
+                     val time: Int)
+data class Quizzes (val id: Int,
+                    val accountId: Int,
+                    val questionIds: List<Int>,
+                    val name: String,
+                    val subject: String,
+                    val difficulty: String,
+                    val settings: Settings,
+                    val totalMarks: Int)
 
 @Composable
 @Preview
 fun quizCreation(changePage: (String) -> Unit) {
+
+    fun mongoCreate() {
+        // Replace the placeholder with your MongoDB deployment's connection string
+        val uri = "mongodb+srv://abnormally:distributed@abnormally-distributed.naumhbd.mongodb.net/?retryWrites=true&w=majority"
+
+        val mongoClient = MongoClient.create(uri)
+        val database = mongoClient.getDatabase("abnormally-distributed")
+        val collection = database.getCollection<Quizzes>("quizzes")
+
+        runBlocking {
+            val result = collection.insertOne(
+                Quizzes(2, 1, listOf(12, 213, 123), "test", "history", "easy", Settings(hints = true, bonus = true, 1), 11)
+            )
+        }
+
+        mongoClient.close()
+    }
 
     // Callback for handling cancelling
     fun handleCancel() {
@@ -27,6 +59,7 @@ fun quizCreation(changePage: (String) -> Unit) {
     // Callback for handling upload
     fun handleNext() {
         changePage("QuizUpload")
+        mongoCreate()
     }
 
     // Overall Box
