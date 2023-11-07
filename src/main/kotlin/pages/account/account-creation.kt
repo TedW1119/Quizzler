@@ -1,4 +1,4 @@
-package pages
+package pages.account
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
@@ -11,43 +11,9 @@ import androidx.compose.runtime.*
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import composables.button
 import kotlinx.coroutines.runBlocking
+import pages.Accounts
 
-// OBJECT: store form data
-object FormData {
-    var name: String = ""
-    var username: String = ""
-    var email: String = ""
-    var password: String = ""
-}
 
-// HELPER: render an input text row of the form
-@Composable
-@Preview
-fun formField(field: String, updateField: (String, String) -> Unit) {
-    var fieldValue by remember { mutableStateOf("") }
-
-    // Handle the field being updated
-    fun onFieldUpdate(value: String) {
-        updateField(field, value)
-    }
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = field
-        )
-
-        OutlinedTextField(
-            value = fieldValue,
-            onValueChange = {
-                input -> fieldValue = input
-                onFieldUpdate(fieldValue)
-            }
-        )
-    }
-}
 
 @Composable
 @Preview
@@ -75,7 +41,7 @@ fun accountCreation(changePage: (String) -> Unit) {
 
         runBlocking {
             val result = collection.insertOne(
-                Accounts(2, formData.name, formData.username, formData.email, formData.password, "university", "2")
+                Accounts(2, FormData.name, FormData.username, FormData.email, FormData.password, "university", "2")
             )
         }
         changePage("Landing")
@@ -84,10 +50,10 @@ fun accountCreation(changePage: (String) -> Unit) {
     // Handle updating a field value
     fun updateField(field: String, value: String) {
         when (field) {
-            "Name" -> formData.name = value
-            "Username" -> formData.username = value
-            "Email" -> formData.email = value
-            "Password" -> formData.password = value
+            "Name" -> FormData.name = value
+            "Username" -> FormData.username = value
+            "Email" -> FormData.email = value
+            "Password" -> FormData.password = value
         }
     }
 
@@ -98,7 +64,7 @@ fun accountCreation(changePage: (String) -> Unit) {
     ) {
 
         fields.forEach {
-            field -> formField(field, ::updateField)
+            field -> formField(field, false, ::updateField)
             Spacer(modifier = Modifier.height(24.dp))
         }
 

@@ -30,6 +30,9 @@ fun landing(changePage: (String) -> Unit) {
     fun handleLogout() {
         changePage("Login")
     }
+    fun handleOpenAccountSettings() {
+        changePage("AccountSettings")
+    }
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -57,7 +60,7 @@ fun landing(changePage: (String) -> Unit) {
                 .width(150.dp)
         ) {
             if (isSettingsVisible) {
-                settingsOverlay(::handleLogout)
+                settingsOverlay(::handleOpenAccountSettings, ::handleLogout)
             }
         }
 
