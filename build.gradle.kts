@@ -21,6 +21,9 @@ dependencies {
     // With compose.desktop.common you will also lose @Preview functionality
     implementation(compose.desktop.currentOs)
     implementation("org.mongodb:mongodb-driver-kotlin-coroutine:4.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+    implementation("org.slf4j:slf4j-simple:2.0.7")
+
     testImplementation(kotlin("test"))
 }
 
@@ -29,6 +32,7 @@ compose.desktop {
         mainClass = "MainKt"
 
         nativeDistributions {
+            includeAllModules = true
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "abnormally-distributed"
             packageVersion = "1.0.0"
