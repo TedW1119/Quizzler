@@ -1,6 +1,8 @@
 package pages
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -20,6 +22,7 @@ fun landing(changePage: (String) -> Unit) {
     val username = "Mr. Creeper"
     var isSidebarVisible by remember { mutableStateOf(false) }
     var isSettingsVisible by remember { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
 
     fun handleCreateQuiz() {
         changePage("QuizCreation")
@@ -35,7 +38,15 @@ fun landing(changePage: (String) -> Unit) {
     }
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable (
+                interactionSource = interactionSource,
+                indication = null
+            ) {
+                isSidebarVisible = false
+                isSettingsVisible = false
+            }
     )
     {
         menubar(sidebarClick = { isSidebarVisible = !isSidebarVisible }, settingsClick = { isSettingsVisible = !isSettingsVisible })
