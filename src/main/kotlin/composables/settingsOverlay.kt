@@ -10,7 +10,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun settingsOverlay(handleLogout: () -> Unit) {
+fun settingsOverlay(
+    handleOpenAccountSettings: () -> Unit,
+    handleLogout: () -> Unit
+) {
     Column(
         modifier = Modifier
             .offset(0.dp, 56.dp)
@@ -21,7 +24,7 @@ fun settingsOverlay(handleLogout: () -> Unit) {
     ) {
         // settings content, including menu items, can be added here
         // Note: just text as placeholders for now, they will be buttons in the future
-        Text("Profile", Modifier.padding(2.dp), fontSize = 15.sp)
+        button("Profile", false, handleOpenAccountSettings)
         Text("Settings", Modifier.padding(2.dp), fontSize = 15.sp)
         button("Logout", false, handleLogout)
     }
