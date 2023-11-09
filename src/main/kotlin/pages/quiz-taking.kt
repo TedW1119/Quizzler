@@ -12,18 +12,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mongodb.client.model.Filters
+import com.mongodb.kotlin.client.coroutine.MongoClient
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.runBlocking
+
+data class Questions (
+    val id: Int,
+    val question: String,
+    val type: String,
+    val options: List<String>,
+    val hint: String?,
+    val marks: Int,
+    val answer: String)
 
 @Composable
 @Preview
-fun quizMCQ(changePage: (String) -> Unit) {
+fun quizTaking(changePage: (String) -> Unit, data: MutableMap<Any, Any>) {
+    val uri = "mongodb+srv://abnormally:distributed@abnormally-distributed.naumhbd.mongodb.net/?retryWrites=true&w=majority"
+    val client = MongoClient.create(uri)
+    val database = client.getDatabase("abnormally-distributed")
+    val collection = database.getCollection<Questions>("questions")
+    val questionIds: List<String> = data["questionIds"] as List<String>
+    var questions: List<Questions>
+    runBlocking {
+        questions = collection.find(Filters.`in`("id", questionIds)).toList()
+    }
     var selectedOption by remember { mutableStateOf(1) }
 
     fun handleExitQuiz() {
-        changePage("Landing")
+        changePage("QuizList")
     }
 
     Column(
-            modifier = Modifier.background(Color.White).padding(16.dp),
+            modifier = Modifier.fillMaxSize().background(Color.White).padding(16.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth().background(Color.LightGray).padding(16.dp),
@@ -58,14 +80,22 @@ fun quizMCQ(changePage: (String) -> Unit) {
                 }
             }
 
-            val options = listOf("Hyper Text Makeup Language", "Hyper Text Markup Language", "Happy Turtles Munch Lettuce", "How To Machine Learning")
-            options.forEachIndexed { index, option ->
-                radioButtonOption(
-                    text = option,
-                    selected = selectedOption == index + 1,
-                    onSelect = { selectedOption = index + 1 }
-                )
+            Box (
+                // set weight to 1f so that it pushes the buttons to the button of the page
+                modifier = Modifier.weight(1f, fill = true).fillMaxSize()
+            ) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    val options = listOf("Hyper Text Makeup Language", "Hyper Text Markup Language", "Happy Turtles Munch Lettuce", "How To Machine Learning")
+                    options.forEachIndexed { index, option ->
+                        radioButtonOption(
+                            text = option,
+                            selected = selectedOption == index + 1,
+                            onSelect = { selectedOption = index + 1 }
+                        )
+                    }
+                }
             }
+
 
             Spacer(modifier = Modifier.height(24.dp))
 

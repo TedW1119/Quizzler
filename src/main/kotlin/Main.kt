@@ -1,3 +1,4 @@
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -11,9 +12,12 @@ import pages.account.accountSettings
 
 fun main() = application {
     var currentPage by remember { mutableStateOf("Login" )}
+    var data = remember { mutableMapOf<Any, Any>() }
 
-    fun changePage(newPage: String) {
+    fun changePage(newPage: String, newData: MutableMap<Any, Any> = mutableMapOf()) {
         currentPage = newPage
+        // update data with newData
+        data.putAll(newData)
     }
 
     Window(
@@ -25,7 +29,8 @@ fun main() = application {
             "AccountCreation" -> accountCreation(::changePage)
             "Landing" -> landing(::changePage)
             "QuizCreation" -> quizCreation(::changePage)
-            "QuizTaking" -> quizMCQ(::changePage)
+            "QuizList" -> quizList(::changePage)
+            "QuizTaking" -> quizTaking(::changePage, data)
             "QuizUpload" -> quizUpload(::changePage)
             "AccountSettings" -> accountSettings(::changePage, ObjectId("65487520d9f28b7ce8191478"))
         }

@@ -11,10 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import composables.menubar
-import composables.sidebar
 import composables.button
+import composables.menubar
 import composables.settingsOverlay
+import composables.sidebar
 
 @Composable
 @Preview
@@ -27,8 +27,8 @@ fun landing(changePage: (String) -> Unit) {
     fun handleCreateQuiz() {
         changePage("QuizCreation")
     }
-    fun handleTakeQuiz() {
-        changePage("QuizTaking")
+    fun handleViewQuizzes() {
+        changePage("QuizList")
     }
     fun handleLogout() {
         changePage("Login")
@@ -104,7 +104,7 @@ fun landing(changePage: (String) -> Unit) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 button("Create a Quiz", true, ::handleCreateQuiz, Modifier.padding(100.dp))
-                button("View my Quizzes", true, ::handleTakeQuiz, Modifier.padding(100.dp))
+                button("View my Quizzes", true, ::handleViewQuizzes, Modifier.padding(100.dp))
 
             }
         }
