@@ -11,7 +11,9 @@ import androidx.compose.runtime.*
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import composables.button
 import kotlinx.coroutines.runBlocking
-import pages.Accounts
+import pages.Account
+
+//import utils.DataModels.Account
 
 
 
@@ -37,11 +39,11 @@ fun accountCreation(changePage: (String) -> Unit) {
 
         val mongoClient = MongoClient.create(uri)
         val database = mongoClient.getDatabase("abnormally-distributed")
-        val collection = database.getCollection<Accounts>("accounts")
+        val collection = database.getCollection<Account>("Account")
 
         runBlocking {
             val result = collection.insertOne(
-                Accounts(2, FormData.name, FormData.username, FormData.email, FormData.password, "university", "2")
+                Account(2, FormData.name, FormData.username, FormData.email, FormData.password, "university", "2")
             )
         }
         changePage("Landing")

@@ -16,12 +16,14 @@ import com.mongodb.kotlin.client.coroutine.MongoClient
 import composables.button
 import composables.slider
 import kotlinx.coroutines.runBlocking
+//import utils.DataModels.Settings
+//import utils.DataModels.Quiz
 
 // Create data class to represent a MongoDB document
 data class Settings (val hints: Boolean,
                      val bonus: Boolean,
                      val time: Int)
-data class Quizzes (val id: Int,
+data class Quiz (val id: Int,
                     val accountId: Int,
                     val questionIds: List<Int>,
                     val name: String,
@@ -40,11 +42,11 @@ fun quizCreation(changePage: (String) -> Unit) {
 
         val mongoClient = MongoClient.create(uri)
         val database = mongoClient.getDatabase("abnormally-distributed")
-        val collection = database.getCollection<Quizzes>("quizzes")
+        val collection = database.getCollection<Quiz>("quizzes")
 
         runBlocking {
             val result = collection.insertOne(
-                Quizzes(2, 1, listOf(12, 213, 123), "test", "history", "easy", Settings(hints = true, bonus = true, 1), 11)
+                Quiz(2, 1, listOf(12, 213, 123), "test", "history", "easy", Settings(hints = true, bonus = true, 1), 11)
             )
         }
 
