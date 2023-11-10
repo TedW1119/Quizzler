@@ -16,8 +16,9 @@ import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
+//import utils.DataModels.Question
 
-data class Questions (
+data class Question (
     val id: Int,
     val question: String,
     val type: String,
@@ -32,9 +33,9 @@ fun quizTaking(changePage: (String) -> Unit, data: MutableMap<Any, Any>) {
     val uri = "mongodb+srv://abnormally:distributed@abnormally-distributed.naumhbd.mongodb.net/?retryWrites=true&w=majority"
     val client = MongoClient.create(uri)
     val database = client.getDatabase("abnormally-distributed")
-    val collection = database.getCollection<Questions>("questions")
+    val collection = database.getCollection<Question>("questions")
     val questionIds: List<String> = data["questionIds"] as List<String>
-    var questions: List<Questions>
+    var questions: List<Question>
     runBlocking {
         questions = collection.find(Filters.`in`("id", questionIds)).toList()
     }

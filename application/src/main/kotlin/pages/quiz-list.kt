@@ -19,6 +19,7 @@ import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
+//import utils.DataModels.Quiz
 
 @Composable
 fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit) {
@@ -37,10 +38,10 @@ fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit) {
     val uri = "mongodb+srv://abnormally:distributed@abnormally-distributed.naumhbd.mongodb.net/?retryWrites=true&w=majority"
     val client = MongoClient.create(uri)
     val database = client.getDatabase("abnormally-distributed")
-    val collection = database.getCollection<Quizzes>("quizzes")
+    val collection = database.getCollection<Quiz>("quizzes")
     // TODO: hard coded for now
     val accountId = 7
-    var quizzes: List<Quizzes>
+    var quizzes: List<Quiz>
     runBlocking {
         quizzes = collection.find(Filters.eq("accountId", accountId)).toList()
     }

@@ -17,9 +17,10 @@ import com.mongodb.kotlin.client.coroutine.MongoClient
 import composables.button
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
+//import utils.DataModels.Account
 
-// Create data class to represent a MongoDB document
-data class Accounts(val id: Int,
+ //Create data class to represent a MongoDB document
+data class Account(val id: Int,
                     val name: String,
                     val username: String,
                     val email: String,
@@ -46,7 +47,7 @@ fun login(changePage: (String) -> Unit) {
 
         val mongoClient = MongoClient.create(uri)
         val database = mongoClient.getDatabase("abnormally-distributed")
-        val collection = database.getCollection<Accounts>("accounts")
+        val collection = database.getCollection<Account>("accounts")
 
         runBlocking {
             val doc = collection.find(Filters.eq("username", "thesnipe")).firstOrNull()

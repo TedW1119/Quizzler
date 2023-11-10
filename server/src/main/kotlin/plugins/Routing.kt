@@ -6,27 +6,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import kotlinx.serialization.Serializable
-
-
-// tmp putting these here while the models file is broken
-@Serializable
-data class Settings (
-    val hint: Boolean,
-    val bonus: Boolean,
-    val time: Int
-)
-@Serializable
-data class Quiz (
-    val id: Int,
-    val accountId: Int,
-    val questionIds: List<Int>,
-    val name: String,
-    val subject: String,
-    val difficulty: String,
-    val settings: Settings,
-    val totalMarks: Int
-)
+import util.DataModels.Quiz
 
 
 
