@@ -11,4 +11,4 @@ pluginManagement {
 }
 
 rootProject.name = "abnormally-distributed"
-include("application", "server")
+include("application", "server", "models")
