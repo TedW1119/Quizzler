@@ -1,6 +1,9 @@
 package util
 
 import kotlinx.serialization.Serializable
+import org.bson.BsonType
+import org.bson.codecs.pojo.annotations.BsonId
+import org.bson.codecs.pojo.annotations.BsonRepresentation
 
 object DataModels {
     @Serializable
@@ -12,8 +15,10 @@ object DataModels {
 
     @Serializable
     data class Quiz(
-        val id: String,
-        val accountId: Int,
+        @BsonId
+        @BsonRepresentation(BsonType.OBJECT_ID)
+        val _id: String,
+        val accountId: String,
         val questionIds: List<String>,
         val name: String,
         val subject: String,
@@ -24,7 +29,9 @@ object DataModels {
 
     @Serializable
     data class Question(
-        val id: String,
+        @BsonId
+        @BsonRepresentation(BsonType.OBJECT_ID)
+        val _id: String,
         val question: String,
         val type: String,
         val options: List<String>,
@@ -35,7 +42,9 @@ object DataModels {
 
     @Serializable
     data class Account(
-        val id: String,
+        @BsonId
+        @BsonRepresentation(BsonType.OBJECT_ID)
+        val _id: String,
         val name: String,
         val username: String,
         val email: String,

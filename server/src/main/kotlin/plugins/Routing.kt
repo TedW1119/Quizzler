@@ -18,23 +18,35 @@ fun Application.configureRouting() {
     }
 }
 
-// Quiz API
+// Quiz API                     TODO LOG ERROR ITEMS
 fun Application.quizRouting() {
     var quizController = QuizController()
     routing {
         // get quiz
         get("/quiz/{id}") {
             val id = call.parameters["id"]
-            quizController.test()
-            call.respondText(id.toString(), status = HttpStatusCode.OK)
+            if (id != null) {
+                try {
+                    val quiz = quizController.getQuiz(id)
+                    if (quiz != null) {
+                        call.respond(message = quiz, status = HttpStatusCode.OK)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, "Quiz not found")
+                    }
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
+                }
+            } else {
+                call.respond(HttpStatusCode.BadRequest, "Invalid request")
+            }
         }
 
-        // create quiz
+        // create quiz (or update existing quiz)
         post("/quiz") {
             try {
                 val quiz = call.receive<Quiz>()
                 // store in database
-                quizController.test()
+                quizController.createQuiz(quiz)
                 call.response.status(HttpStatusCode.Created)
             } catch (e: ContentTransformationException) {
                 // Handle ContentTransformationException, which occurs when there's an issue with deserializing the request body
@@ -45,11 +57,25 @@ fun Application.quizRouting() {
             }
         }
 
-        // update quiz
-
         // delete quiz
-        delete(path="/quiz") {
-            println("BBB")
+        delete(path="/quiz/{id}") {
+            val id = call.parameters["id"]
+
+            if (id != null) {
+                try {
+                    val isDeleted = quizController.deleteQuiz(id)
+
+                    if (isDeleted) {
+                        call.respond(HttpStatusCode.NoContent)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, "Quiz not found")
+                    }
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
+                }
+            } else {
+                call.respond(HttpStatusCode.BadRequest, "Invalid request")
+            }
         }
     }
 }
