@@ -1,13 +1,20 @@
 package controllers
 
 import services.QuizService
+import util.DataModels.Quiz
 
 class QuizController {
-    val quizService: QuizService = QuizService()
+    private val quizService: QuizService = QuizService()
 
+    fun createQuiz(quiz: Quiz) {
+        quizService.createQuiz(quiz)
+    }
 
-    fun test() {
-        println("TEST CONTROLLER")
-        quizService.test()
+    fun getQuiz(id: String): Quiz? {
+        return quizService.getQuiz(id)
+    }
+
+    fun deleteQuiz(id: String): Boolean {
+        return quizService.deleteQuiz(id)
     }
 }
