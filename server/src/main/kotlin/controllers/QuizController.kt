@@ -14,6 +14,11 @@ class QuizController {
         return quizService.getQuiz(id)
     }
 
+    fun getQuizzesByAccountId(accountId: String): List<Quiz>? {
+        return quizService.getQuizzesByAccountId((accountId))
+    }
+
+
     fun deleteQuiz(id: String): Boolean {
         return quizService.deleteQuiz(id)
     }

@@ -35,7 +35,7 @@ object DataModels {
         val question: String,
         val type: String,
         val options: List<String>,
-        val hint: String?,
+        val hint: String,
         val marks: Int,
         val answer: String
     )
