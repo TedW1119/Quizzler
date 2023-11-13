@@ -32,7 +32,7 @@ fun main() = application {
             "QuizList" -> quizList(::changePage)
             "QuizTaking" -> quizTaking(::changePage, data)
             "QuizUpload" -> quizUpload(::changePage)
-            "AccountSettings" -> accountSettings(::changePage, ObjectId("65487520d9f28b7ce8191478"))
+            "AccountSettings" -> accountSettings(::changePage, "65487520d9f28b7ce8191478")
         }
     }
 }

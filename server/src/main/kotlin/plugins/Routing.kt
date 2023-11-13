@@ -9,6 +9,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import util.DataModels
+import util.DataModels.Account
 import util.DataModels.Quiz
 
 
@@ -16,6 +17,85 @@ fun Application.configureRouting() {
     routing {
         get("/") {
             call.respondText("Hello World!")
+        }
+    }
+}
+
+// Account API
+fun Application.accountRouting() {
+    val accountController = AccountController()
+    routing {
+
+        // Get an account
+        get("/account/{id}") {
+            val id = call.parameters["id"]
+            if (id != null) {
+                try {
+                    val account = accountController.getAccount(id)
+                    if (account != null) {
+                        call.respond(message = account, status = HttpStatusCode.OK)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, "Account not found")
+                    }
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
+                }
+            } else {
+                call.respond(HttpStatusCode.BadRequest, "Invalid request")
+            }
+        }
+
+        // Get quizzes associated with an account
+        get("/account/{id}/quizzes") {
+            val id = call.parameters["id"]
+            if (id != null) {
+                try {
+                    val accountQuizzes = accountController.getAccountQuizzes(id)
+                    if (!accountQuizzes.isNullOrEmpty()) {
+                        call.respond(message = accountQuizzes, status = HttpStatusCode.OK)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, "Account quizzes not found")
+                    }
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
+                }
+            } else {
+                call.respond(HttpStatusCode.BadRequest, "Invalid request")
+            }
+        }
+
+        // Create/update an account
+        post("/account") {
+            try {
+                val account = call.receive<Account>()
+                accountController.upsertAccount(account)
+                call.response.status(HttpStatusCode.Created)
+            } catch (e: ContentTransformationException) {
+                // Handle ContentTransformationException, which occurs when there's an issue with deserializing the request body
+                call.respond(HttpStatusCode.BadRequest, "Invalid request body format")
+            } catch (e: Exception) {
+                // Handle other exceptions that might occur during the processing of the request
+                call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
+            }
+        }
+
+        // Delete an account
+        delete("/account/{id}") {
+            val id = call.parameters["id"]
+            if (id != null) {
+                try {
+                    val isDeleted = accountController.deleteAccount(id)
+                    if (isDeleted) {
+                        call.respond(HttpStatusCode.NoContent)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, "Account not found")
+                    }
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
+                }
+            } else {
+                call.respond(HttpStatusCode.BadRequest, "Invalid request")
+            }
         }
     }
 }
@@ -113,29 +193,6 @@ fun Application.questionRouting() {
                 call.respond(HttpStatusCode.BadRequest, "Invalid request body format")
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
-            }
-        }
-    }
-}
-
-fun Application.accountRouting() {
-    val accountController = AccountController()
-    routing {
-        get("/account/{id}/quizzes") {
-            val id = call.parameters["id"]
-            if (id != null) {
-                try {
-                    val accountQuizzes = accountController.getAccountQuizzes(id)
-                    if (!accountQuizzes.isNullOrEmpty()) {
-                        call.respond(message = accountQuizzes, status = HttpStatusCode.OK)
-                    } else {
-                        call.respond(HttpStatusCode.NotFound, "Account quizzes not found")
-                    }
-                } catch (e: Exception) {
-                    call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
-                }
-            } else {
-                call.respond(HttpStatusCode.BadRequest, "Invalid request")
             }
         }
     }

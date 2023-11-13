@@ -17,27 +17,28 @@ import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import composables.button
 import composables.dropdown
+import controllers.AccountController
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import org.bson.types.ObjectId
-import pages.Account
+import utils.DataModels.Account
 
 //import utils.DataModels.Account
 
 @Composable
 @Preview
-fun accountSettings(changePage: (String) -> Unit, accountId: ObjectId) {
+fun accountSettings(changePage: (String) -> Unit, accountId: String) {
     var account: Account
+    val accountController: AccountController = AccountController()
 
     // Query the user's account data
-    // TODO: maybe move all of this MongoDB logic to a centralized file
-    val uri = "mongodb+srv://abnormally:distributed@abnormally-distributed.naumhbd.mongodb.net/?retryWrites=true&w=majority"
-    val client = MongoClient.create(uri)
-    val database = client.getDatabase("abnormally-distributed")
-    val collection = database.getCollection<Account>("accounts")
     runBlocking {
-        account = collection.find(Filters.eq("_id", accountId)).firstOrNull()
-            ?: Account(0, "", "", "", "", "", "")
+        val response = accountController.getAccount(accountId)
+        if (response != null) {
+            account = response
+        } else {
+            account = Account("", "", "", "", "", "", "")
+        }
         // TODO: display error message if no account was found for the accountId
     }
 
