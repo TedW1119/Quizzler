@@ -15,16 +15,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mongodb.client.model.Filters
-import com.mongodb.kotlin.client.coroutine.MongoClient
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
-//import utils.DataModels.Quiz
+import kotlinx.serialization.json.Json
+import utils.Constants.BASE_URL
+import utils.DataModels.Quiz
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
+
+fun getQuizList(accountId: String): List<Quiz> {
+    val client = HttpClient.newBuilder().build()
+    val request = HttpRequest.newBuilder()
+        .uri(URI.create("${BASE_URL}/account/${accountId}/quizzes"))
+        .GET()
+        .build()
+    val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+    return Json.decodeFromString<List<Quiz>>(response.body())
+}
 
 @Composable
 fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit) {
+    // TODO: remove hard code
+    val quizzes = getQuizList("654ea337eb947a7ceabb0643")
+
     var data: MutableMap<Any, Any> = mutableMapOf()
-    fun handleQuizTaking(questionIds: List<Int>) {
+    fun handleQuizTaking(questionIds: List<String>) {
         data = mutableMapOf(
             "questionIds" to questionIds
         )
@@ -33,17 +48,6 @@ fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit) {
 
     fun handleExitQuizList() {
         changePage("Landing", data)
-    }
-
-    val uri = "mongodb+srv://abnormally:distributed@abnormally-distributed.naumhbd.mongodb.net/?retryWrites=true&w=majority"
-    val client = MongoClient.create(uri)
-    val database = client.getDatabase("abnormally-distributed")
-    val collection = database.getCollection<Quiz>("quizzes")
-    // TODO: hard coded for now
-    val accountId = 7
-    var quizzes: List<Quiz>
-    runBlocking {
-        quizzes = collection.find(Filters.eq("accountId", accountId)).toList()
     }
 
     Scaffold(

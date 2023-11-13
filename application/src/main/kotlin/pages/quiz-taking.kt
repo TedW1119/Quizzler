@@ -12,33 +12,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mongodb.client.model.Filters
-import com.mongodb.kotlin.client.coroutine.MongoClient
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
-//import utils.DataModels.Question
+import kotlinx.serialization.json.Json
+import utils.Constants.BASE_URL
+import utils.DataModels.Question
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse
 
-data class Question (
-    val id: Int,
-    val question: String,
-    val type: String,
-    val options: List<String>,
-    val hint: String?,
-    val marks: Int,
-    val answer: String)
+fun getQuiz(id: String): Question {
+    val client = HttpClient.newBuilder().build()
+    val request = HttpRequest.newBuilder()
+        .uri(URI.create("${BASE_URL}/question/${id}"))
+        .GET()
+        .build()
+    val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+    return Json.decodeFromString<Question>(response.body())
+}
 
 @Composable
 @Preview
 fun quizTaking(changePage: (String) -> Unit, data: MutableMap<Any, Any>) {
-    val uri = "mongodb+srv://abnormally:distributed@abnormally-distributed.naumhbd.mongodb.net/?retryWrites=true&w=majority"
-    val client = MongoClient.create(uri)
-    val database = client.getDatabase("abnormally-distributed")
-    val collection = database.getCollection<Question>("questions")
-    val questionIds: List<String> = data["questionIds"] as List<String>
-    var questions: List<Question>
-    runBlocking {
-        questions = collection.find(Filters.`in`("id", questionIds)).toList()
-    }
     var selectedOption by remember { mutableStateOf(1) }
 
     fun handleExitQuiz() {
