@@ -7,13 +7,6 @@ import org.bson.codecs.pojo.annotations.BsonRepresentation
 
 object DataModels {
     @Serializable
-    data class Settings(
-        val hint: Boolean,
-        val bonus: Boolean,
-        val time: Int
-    )
-
-    @Serializable
     data class Quiz(
         @BsonId
         @BsonRepresentation(BsonType.OBJECT_ID)
@@ -23,8 +16,11 @@ object DataModels {
         val name: String,
         val subject: String,
         val difficulty: String,
-        val settings: Settings,
-        val totalMarks: Int
+        val questionType: String,
+        val totalQuestions: Int,
+        val totalMarks: Double,
+        val hint: Boolean,
+        val time: Int
     )
 
     @Serializable
@@ -35,7 +31,7 @@ object DataModels {
         val question: String,
         val type: String,
         val options: List<String>,
-        val hint: String,
+        val hint: String?,
         val marks: Int,
         val answer: String
     )
