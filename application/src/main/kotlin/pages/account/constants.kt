@@ -1,11 +1,14 @@
 package pages.account
 
 // OBJECT: store form data
-object FormData {
+object AccountFormData {
     var name: String = ""
     var username: String = ""
     var email: String = ""
     var password: String = ""
+    var confirmPassword: String = ""
+    var educationLevel: String = ""
+    var profilePictureId: String = ""
 }
 
 // Form data for AccountSettings

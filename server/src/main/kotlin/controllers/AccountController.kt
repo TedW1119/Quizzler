@@ -14,6 +14,11 @@ class AccountController {
         return accountService.getAccount(id)
     }
 
+    // Query an account using login information
+    fun getAccountFromLogin(identifier: String): Account? {
+        return accountService.getAccountFromLogin(identifier)
+    }
+
     // Query quizzes associated with an account
     fun getAccountQuizzes(id: String): List<Quiz>? {
         return quizController.getQuizzesByAccountId((id))
@@ -21,7 +26,8 @@ class AccountController {
 
     // Create/update an account
     fun upsertAccount(account: Account) {
-        accountService.upsertQuiz(account)
+        print(account)
+        accountService.upsertAccount(account)
     }
 
     // Delete an account

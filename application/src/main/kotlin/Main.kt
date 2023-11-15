@@ -9,9 +9,15 @@ import org.bson.types.ObjectId
 import pages.*
 import pages.account.accountCreation
 import pages.account.accountSettings
+import utils.DataModels.Account
 
 fun main() = application {
+
+    // Tracks the current page being rendered
     var currentPage by remember { mutableStateOf("Login" )}
+
+    // Tracks the data stored across the application (similar to a "store")
+    //  data[account]: data for the currently-logged-in account
     var data = remember { mutableMapOf<Any, Any>() }
 
     fun changePage(newPage: String, newData: MutableMap<Any, Any> = mutableMapOf()) {
@@ -27,12 +33,12 @@ fun main() = application {
         when (currentPage) {
             "Login" -> login(::changePage)
             "AccountCreation" -> accountCreation(::changePage)
-            "Landing" -> landing(::changePage)
+            "Landing" -> landing(::changePage, data["accountId"] as String)
             "QuizCreation" -> quizCreation(::changePage)
             "QuizList" -> quizList(::changePage)
             "QuizTaking" -> quizTaking(::changePage, data)
             "QuizUpload" -> quizUpload(::changePage)
-            "AccountSettings" -> accountSettings(::changePage, "65487520d9f28b7ce8191478")
+            "AccountSettings" -> accountSettings(::changePage, data["accountId"] as String)
         }
     }
 }

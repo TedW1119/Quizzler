@@ -15,11 +15,15 @@ import composables.button
 import composables.menubar
 import composables.settingsOverlay
 import composables.sidebar
+import controllers.AccountController
+import utils.DataModels.Account
 
 @Composable
 @Preview
-fun landing(changePage: (String) -> Unit) {
-    val username = "Mr. Creeper"
+fun landing(changePage: (String) -> Unit, accountId: String) {
+    val accountController: AccountController = AccountController()
+    val account = accountController.getAccount(accountId) ?: return
+    val username = account.name
     var isSidebarVisible by remember { mutableStateOf(false) }
     var isSettingsVisible by remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }

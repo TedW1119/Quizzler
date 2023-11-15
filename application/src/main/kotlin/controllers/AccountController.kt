@@ -1,5 +1,6 @@
 package controllers
 
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import utils.Constants
 import utils.DataModels.Account
@@ -23,6 +24,21 @@ class AccountController {
         return Json.decodeFromString<Account>(response.body())
     }
 
+    // Query an account using login information
+    fun getAccountFromLogin(identifier: String): Account? {
+        val client = HttpClient.newBuilder().build()
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("${Constants.BASE_URL}/account/${identifier}/login"))
+            .GET()
+            .build()
+        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+        return try {
+            Json.decodeFromString<Account>(response.body())
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     // Query quizzes associated with an account
     // TODO: implement this
     fun getAccountQuizzes(id: String): List<Quiz>? {
@@ -31,10 +47,12 @@ class AccountController {
 
     // Create/update an account
     fun upsertAccount(account: Account) {
+        val payload = Json.encodeToString(account)
         val client = HttpClient.newBuilder().build()
         val request = HttpRequest.newBuilder()
             .uri(URI.create("${Constants.BASE_URL}/account"))
-            .POST(HttpRequest.BodyPublishers.ofString(account.toString()))
+            .header("Content-Type", "application/json")
+            .POST(HttpRequest.BodyPublishers.ofString(payload))
             .build()
         val response = client.send(request, HttpResponse.BodyHandlers.ofString())
     }

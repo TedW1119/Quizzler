@@ -10,52 +10,56 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import composables.button
+import controllers.AccountController
 import kotlinx.coroutines.runBlocking
-import pages.Account
-
-//import utils.DataModels.Account
+import org.bson.types.ObjectId
+import utils.DataModels.Account
 
 
 
 @Composable
 @Preview
-fun accountCreation(changePage: (String) -> Unit) {
+fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
+    val accountController: AccountController = AccountController()
+    var data: MutableMap<Any, Any> = mutableMapOf()
 
     // Store form data and fields
-    // TODO: generate list of fields from FormData keys?
-    val formData = FormData
+    var formData = AccountFormData
     val fields = listOf(
         "Name",
         "Username",
         "Email",
-        "Password"
+        "Password",
+        "Confirm Password"
     )
 
     // Handle the login button press
     fun handleCreateAccount() {
-
-        // Replace the placeholder with your MongoDB deployment's connection string
-        val uri = "mongodb+srv://abnormally:distributed@abnormally-distributed.naumhbd.mongodb.net/?retryWrites=true&w=majority"
-
-        val mongoClient = MongoClient.create(uri)
-        val database = mongoClient.getDatabase("abnormally-distributed")
-        val collection = database.getCollection<Account>("Account")
-
-        runBlocking {
-            val result = collection.insertOne(
-                Account(2, FormData.name, FormData.username, FormData.email, FormData.password, "university", "2")
-            )
-        }
-        changePage("Landing")
+        // TODO: perform error checking here
+        val accountId = ObjectId().toString()
+        val account = Account(
+            accountId,
+            formData.name,
+            formData.username,
+            formData.email,
+            formData.password,
+            "testSchool",
+            "testPicId"
+        )
+        accountController.upsertAccount(account)
+        data = mutableMapOf("accountId" to accountId)
+        changePage("Landing", data)
     }
 
     // Handle updating a field value
     fun updateField(field: String, value: String) {
         when (field) {
-            "Name" -> FormData.name = value
-            "Username" -> FormData.username = value
-            "Email" -> FormData.email = value
-            "Password" -> FormData.password = value
+            "Name" -> formData.name = value
+            "Username" -> formData.username = value
+            "Email" -> formData.email = value
+            "Password" -> formData.password = value
+            "Confirm Password" -> formData.confirmPassword = value
+            "Education Level" -> formData.educationLevel = value
         }
     }
 
@@ -70,6 +74,6 @@ fun accountCreation(changePage: (String) -> Unit) {
             Spacer(modifier = Modifier.height(24.dp))
         }
 
-        button("Login", true, ::handleCreateAccount)
+        button("Create Account", true, ::handleCreateAccount)
     }
 }
