@@ -15,55 +15,39 @@ import androidx.compose.ui.unit.sp
 import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import composables.button
+import controllers.AccountController
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 //import utils.DataModels.Account
 
- //Create data class to represent a MongoDB document
-data class Account(val id: Int,
-                    val name: String,
-                    val username: String,
-                    val email: String,
-                    val password: String,
-                    val educationLevel: String,
-                    val profilePicId: String)
-
 @Composable
 @Preview
-fun login(changePage: (String) -> Unit) {
+fun login(changePage: (String, MutableMap<Any, Any>) -> Unit) {
+    val accountController: AccountController = AccountController()
+    var data: MutableMap<Any, Any> = mutableMapOf()
 
     // Track the input field values
-    var username by remember { mutableStateOf("") }
+    var identifier by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     // Handle the login button press
     fun handleLogin() {
-        changePage("Landing")
-    }
-
-    fun mongo() {
-        // Replace the placeholder with your MongoDB deployment's connection string
-        val uri = "mongodb+srv://abnormally:distributed@abnormally-distributed.naumhbd.mongodb.net/?retryWrites=true&w=majority"
-
-        val mongoClient = MongoClient.create(uri)
-        val database = mongoClient.getDatabase("abnormally-distributed")
-        val collection = database.getCollection<Account>("accounts")
-
-        runBlocking {
-            val doc = collection.find(Filters.eq("username", "thesnipe")).firstOrNull()
-            if (doc != null) {
-                println(doc)
-            } else {
-                println("No matching documents found.")
-            }
+        val account = accountController.getAccountFromLogin(identifier)
+        if (account == null) {
+            // TODO: display error message
+            println("No account found")
+        } else if (account.password != password) {
+            // TODO: display error message
+            println("Password does not match")
+        } else {
+            data = mutableMapOf("accountId" to account._id)
+            changePage("Landing", data)
         }
-
-        mongoClient.close()
     }
 
     // Handle the create new account button press
     fun handleCreateAccount() {
-        changePage("AccountCreation")
+        changePage("AccountCreation", data)
     }
 
     Column(
@@ -92,8 +76,8 @@ fun login(changePage: (String) -> Unit) {
         Spacer(modifier = Modifier.height(40.dp))
 
         OutlinedTextField(
-            value = username,
-            onValueChange = { input -> username = input },
+            value = identifier,
+            onValueChange = { input -> identifier = input },
             label = { Text("Email or Username") }
         )
 
@@ -109,10 +93,6 @@ fun login(changePage: (String) -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
 
         button("Login", true, ::handleLogin)
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        button("Mongo", true, ::mongo)
 
         Spacer(modifier = Modifier.height(24.dp))
 

@@ -45,6 +45,25 @@ fun Application.accountRouting() {
             }
         }
 
+        // Get an account using login information
+        get("/account/{identifier}/login") {
+            val identifier = call.parameters["identifier"]
+            if (identifier != null) {
+                try {
+                    val account = accountController.getAccountFromLogin(identifier)
+                    if (account != null) {
+                        call.respond(message = account, status = HttpStatusCode.OK)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, "Account not found")
+                    }
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
+                }
+            } else {
+                call.respond(HttpStatusCode.BadRequest, "Invalid request")
+            }
+        }
+
         // Get quizzes associated with an account
         get("/account/{id}/quizzes") {
             val id = call.parameters["id"]
@@ -68,6 +87,7 @@ fun Application.accountRouting() {
         post("/account") {
             try {
                 val account = call.receive<Account>()
+                print(account)
                 accountController.upsertAccount(account)
                 call.response.status(HttpStatusCode.Created)
             } catch (e: ContentTransformationException) {

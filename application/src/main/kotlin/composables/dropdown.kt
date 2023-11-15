@@ -16,15 +16,12 @@ import androidx.compose.ui.unit.dp
 @Preview
 fun dropdown(
     field: String,
-    //items: List<String>,
+    items: List<String>,
     updateSelectedItem: (String, String) -> Unit,
     defaultItem: String = ""
 ) {
     var expanded by remember { mutableStateOf(false) }
     var selectedItem by remember { mutableStateOf(defaultItem) }
-
-    // TODO: temporary item list, should change this to a parameter
-    val items: List<String> = listOf("Elementary", "Secondary", "Post-Secondary", "Graduate", "Self-Taught")
 
     // Handle the field being updated
     fun onSelectedItemUpdate(value: String) {

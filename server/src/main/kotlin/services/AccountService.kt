@@ -38,8 +38,27 @@ class AccountService() {
         }
     }
 
+    // Query an account document using login information
+    fun getAccountFromLogin(identifier: String): Account? {
+        val (client, collection) = connect(ACCOUNT_COLLECTION)
+        return try {
+            runBlocking {
+                collection.find(Filters.or(
+                        Filters.eq("username", identifier),
+                        Filters.eq("email", identifier)
+                    )
+                ).first()
+            }
+        } catch (e: Exception) {
+            // TODO: log the error
+            null
+        } finally {
+            client.close()
+        }
+    }
+
     // Create/update an account document
-    fun upsertQuiz(account: Account) {
+    fun upsertAccount(account: Account) {
         val (client, collection) = connect(ACCOUNT_COLLECTION)
         try {
             runBlocking {

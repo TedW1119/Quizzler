@@ -28,19 +28,8 @@ import utils.DataModels.Account
 @Composable
 @Preview
 fun accountSettings(changePage: (String) -> Unit, accountId: String) {
-    var account: Account
     val accountController: AccountController = AccountController()
-
-    // Query the user's account data
-    runBlocking {
-        val response = accountController.getAccount(accountId)
-        if (response != null) {
-            account = response
-        } else {
-            account = Account("", "", "", "", "", "", "")
-        }
-        // TODO: display error message if no account was found for the accountId
-    }
+    val account = accountController.getAccount(accountId) ?: return
 
     // Display account data, and store changes
     val accountData = AccountSettingsFormData(
@@ -53,10 +42,21 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String) {
 
     // Handle button presses
     fun handleCancel() {
-
+        changePage("Landing")
     }
     fun handleSaveChanges() {
-
+        val payload = Account(
+            account._id,
+            accountData.name,
+            accountData.username,
+            accountData.email,
+            account.password,
+            accountData.educationLevel,
+            accountData.profilePictureId
+        )
+        accountController.upsertAccount(payload)
+        // TODO: show confirmation modal, show success message
+        changePage("Landing")
     }
 
     // Handle updating a field value
@@ -98,9 +98,7 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String) {
                     formField("Email", true, ::updateField, accountData.email)
                 }
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                    // TODO: fix passing the dropdown a list of items
-                    //dropdown("Education Level", educationLevelOptions, ::updateField, accountData.educationLevel)
-                    dropdown("Education Level", ::updateField, accountData.educationLevel)
+                    dropdown("Education Level", educationLevelOptions, ::updateField, accountData.educationLevel)
                 }
             }
 
