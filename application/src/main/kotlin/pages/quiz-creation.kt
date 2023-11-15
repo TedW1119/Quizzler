@@ -36,7 +36,7 @@ object QuizFormData {
 
 @Composable
 @Preview
-fun quizCreation(changePage: (String) -> Unit) {
+fun quizCreation(changePage: (String) -> Unit, accountId: String) {
     val quizForm = QuizFormData
     val quizController = QuizController()
 
@@ -48,7 +48,7 @@ fun quizCreation(changePage: (String) -> Unit) {
     fun handleCreateQuiz() {
         val quiz = Quiz(
             _id = ObjectId().toString(),
-            accountId = "654ea337eb947a7ceabb0643", // TODO change this to whoever is logged in
+            accountId = accountId,
             questionIds = mutableListOf<String>(), // ?
             name = quizForm.quizName,
             subject = quizForm.quizSubject,

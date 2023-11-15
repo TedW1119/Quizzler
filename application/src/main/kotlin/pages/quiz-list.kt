@@ -36,9 +36,9 @@ fun getQuizList(accountId: String): List<Quiz> {
 }
 
 @Composable
-fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit) {
+fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: String) {
     // TODO: remove hard code
-    val quizzes = getQuizList("654ea337eb947a7ceabb0643")
+    val quizzes = getQuizList(accountId)
     val quizController = QuizController()
 
     var data: MutableMap<Any, Any> = mutableMapOf()
