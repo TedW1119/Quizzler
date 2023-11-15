@@ -3,24 +3,24 @@ package pages
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
-import androidx.compose.material.RadioButton
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import utils.Constants.BASE_URL
 import utils.DataModels.Question
+import utils.DataModels.Quiz
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
-fun getQuiz(id: String): Question {
+fun getQuestion(id: String): Question {
     val client = HttpClient.newBuilder().build()
     val request = HttpRequest.newBuilder()
         .uri(URI.create("${BASE_URL}/question/${id}"))
@@ -30,13 +30,61 @@ fun getQuiz(id: String): Question {
     return Json.decodeFromString<Question>(response.body())
 }
 
+fun updateQuiz(quiz: Quiz): String {
+    val quizSerialized = Json.encodeToString(quiz)
+    val client = HttpClient.newBuilder().build();
+    val request = HttpRequest.newBuilder()
+        .uri(URI.create("${BASE_URL}/quiz"))
+        .header("Content-Type", "application/json")
+        .POST(HttpRequest.BodyPublishers.ofString(quizSerialized))
+        .build()
+    val response = client.send(request, HttpResponse.BodyHandlers.ofString());
+    return response.body()
+}
+
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 @Preview
-fun quizTaking(changePage: (String) -> Unit, data: MutableMap<Any, Any>) {
-    var selectedOption by remember { mutableStateOf(1) }
+fun quizTaking(changePage: (String, MutableMap<Any, Any>) -> Unit, data: MutableMap<Any, Any>) {
+    val quiz = data["quiz"] as Quiz
+    var questionIndex by remember { mutableStateOf(0) }
+    val answers = remember { mutableStateListOf<String?>(null) }
+    val questions = remember { mutableStateListOf(getQuestion(quiz.questionIds.first()))}
+
+    // LaunchedEffect ensures that code does not rerun in recomposition
+    LaunchedEffect(Unit) {
+        for (i in 0..quiz.questionIds.size) {
+            answers.add(null)
+        }
+    }
+
+    var showSubmitDialog by remember { mutableStateOf(false) }
+    var showExitDialog by remember { mutableStateOf(false) }
+
+    var selectedOption by remember { mutableStateOf<String?>(null) }
 
     fun handleExitQuiz() {
-        changePage("QuizList")
+        val newData: MutableMap<Any, Any> = mutableMapOf()
+        changePage("QuizList", newData)
+    }
+
+    fun handleSubmit() {
+        // calculate the number of correct answers
+        var correctCount = 0
+        for (i in 0 until questions.size) {
+            if (questions[i].answer == answers[i]) {
+                correctCount += 1
+            }
+        }
+
+        val newTotalMarks = calculatePercentage(correctCount, quiz.questionIds.size)
+        val updatedQuiz = quiz.copy(totalMarks = newTotalMarks)
+        updateQuiz(updatedQuiz)
+
+        val newData: MutableMap<Any, Any> = mutableMapOf(
+            "quizScore" to Pair(correctCount, quiz.questionIds.size)
+        )
+        changePage("QuizResult", newData)
     }
 
     Column(
@@ -47,7 +95,7 @@ fun quizTaking(changePage: (String) -> Unit, data: MutableMap<Any, Any>) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    "4. What does HTML stand for?",
+                    text = questions[questionIndex].question,
                     fontSize = 20.sp,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
@@ -57,19 +105,19 @@ fun quizTaking(changePage: (String) -> Unit, data: MutableMap<Any, Any>) {
                         .padding(horizontal = 12.dp, vertical = 4.dp),
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("Question 4 of 10", fontSize = 14.sp)
+                    Text("Question ${questionIndex + 1} of ${quiz.questionIds.size}", fontSize = 14.sp)
                     Spacer(modifier = Modifier.height(10.dp))
                     Box(
                         modifier = Modifier
                             .background(Color.White)
                             .height(5.dp)
-                            .width(120.dp)
+                            .width(100.dp)
                     ) {
                         Box(
                             modifier = Modifier
                                 .background(Color.Green)
                                 .fillMaxHeight()
-                                .width(45.dp)  // Assuming 4 out of 10 questions are completed, adjust this as needed
+                                .width((100 * (questionIndex + 1) / quiz.questionIds.size).dp)
                         )
                     }
                 }
@@ -80,17 +128,25 @@ fun quizTaking(changePage: (String) -> Unit, data: MutableMap<Any, Any>) {
                 modifier = Modifier.weight(1f, fill = true).fillMaxSize()
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    val options = listOf("Hyper Text Makeup Language", "Hyper Text Markup Language", "Happy Turtles Munch Lettuce", "How To Machine Learning")
-                    options.forEachIndexed { index, option ->
-                        radioButtonOption(
-                            text = option,
-                            selected = selectedOption == index + 1,
-                            onSelect = { selectedOption = index + 1 }
-                        )
+                    val options = questions[questionIndex].options
+                    options.forEachIndexed { _, option ->
+                        Row(
+                            modifier = Modifier.fillMaxWidth().padding(8.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start
+                        ) {
+                            RadioButton(
+                                selected = option == selectedOption,
+                                onClick = {
+                                    selectedOption = option
+                                    answers[questionIndex] = option
+                                }
+                            )
+                            Text(text = option, modifier = Modifier.padding(start = 8.dp))
+                        }
                     }
                 }
             }
-
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -98,29 +154,105 @@ fun quizTaking(changePage: (String) -> Unit, data: MutableMap<Any, Any>) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                Button(onClick = { handleExitQuiz() }) {
+                Button(onClick = { showExitDialog = true } ) {
                     Text("Exit Quiz")
                 }
                 Spacer(modifier = Modifier.width(8.dp))
-                Button(onClick = {}) {
+                Button(
+                    onClick = {
+                        questionIndex -= 1
+                        selectedOption = if (answers[questionIndex] != null) {
+                            answers[questionIndex]
+                        } else {
+                            null
+                        }
+                    },
+                    enabled = questionIndex != 0
+                ) {
                     Text("Previous Question")
                 }
                 Spacer(modifier = Modifier.width(8.dp))
-                Button(onClick = {}) {
+                Button(
+                    onClick = {
+                        questionIndex += 1
+                        if (questions.size == questionIndex) {
+                            questions.add(getQuestion(quiz.questionIds[questionIndex]))
+                        }
+                        selectedOption = if (answers[questionIndex] != null) {
+                            answers[questionIndex]
+                        } else {
+                            null
+                        }
+                    },
+                    enabled = questionIndex < quiz.questionIds.size - 1) {
                     Text("Next Question")
+                }
+                Spacer(modifier = Modifier.width(8.dp))
+                Button(
+                    onClick = {
+                        showSubmitDialog = true
+                    }
+                ) {
+                    Text("Submit")
                 }
             }
         }
+
+    if (showSubmitDialog) {
+        val numCompleted = answers.count { it != null }
+        AlertDialog(
+            onDismissRequest = { showSubmitDialog = false },
+            title = { Text("Are you sure you want to submit the quiz?") },
+            text = { Text("You have completed ${numCompleted}/${quiz.questionIds.size} questions") },
+            buttons = {
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 16.dp, bottom = 8.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedButton(
+                        onClick = { showSubmitDialog = false },
+                    ) {
+                        Text("Cancel")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(
+                        onClick = ::handleSubmit,
+                    ) {
+                        Text("Submit")
+                    }
+                }
+            }
+        )
     }
 
-@Composable
-fun radioButtonOption(text: String, selected: Boolean, onSelect: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Start
-    ) {
-        RadioButton(selected = selected, onClick = onSelect)
-        Text(text = text, modifier = Modifier.padding(start = 8.dp))
+    if (showExitDialog) {
+        AlertDialog(
+            onDismissRequest = { showExitDialog = false },
+            title = { Text("Are you sure you want to leave the quiz?") },
+            buttons = {
+                Row (
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 16.dp, bottom = 8.dp, top = 8.dp),
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedButton(
+                        onClick = { showExitDialog = false },
+                    ) {
+                        Text("Cancel")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(
+                        onClick = ::handleExitQuiz,
+                    ) {
+                        Text("Exit")
+                    }
+                }
+            }
+        )
     }
 }

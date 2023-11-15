@@ -190,8 +190,16 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String) {
                                         Text("20")
                                     }
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Button(onClick = {}) {
-                                        Text("?")
+                                    Button(onClick = {
+                                        quizForm.totalQuestions = 2
+                                        quizForm.totalMarks = 2.0
+                                        println("set number of questions to 2")
+                                        selectedQuestionCount = 2
+                                    },
+                                        modifier = Modifier
+                                            .background(if (selectedQuestionCount == 2) Color.Blue else Color.Gray)
+                                    ) {
+                                        Text("2?")
                                     }
                                 }
                             }

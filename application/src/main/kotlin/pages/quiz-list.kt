@@ -41,16 +41,16 @@ fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: Stri
     val quizzes = getQuizList(accountId)
     val quizController = QuizController()
 
-    var data: MutableMap<Any, Any> = mutableMapOf()
-    fun handleQuizTaking(questionIds: List<String>) {
-        data = mutableMapOf(
-            "questionIds" to questionIds
+    fun handleQuizTaking(quiz: Quiz) {
+        val newData: MutableMap<Any, Any> = mutableMapOf(
+            "quiz" to quiz,
         )
-        changePage("QuizTaking", data)
+        changePage("QuizTaking", newData)
     }
 
     fun handleExitQuizList() {
-        changePage("Landing", data)
+        val newData: MutableMap<Any, Any> = mutableMapOf()
+        changePage("Landing", newData)
     }
 
     Scaffold(
@@ -80,7 +80,7 @@ fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: Stri
                         modifier = Modifier
                             .padding(10.dp)
                             .fillMaxWidth()
-                            .clickable( onClick = { handleQuizTaking(quizzes[index].questionIds) } ),
+                            .clickable( onClick = { handleQuizTaking(quizzes[index]) } ),
                         elevation = 16.dp,
                     ) {
                         Column( // Use a Column to stack Texts vertically
@@ -109,7 +109,7 @@ fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: Stri
                                 modifier = Modifier.padding(2.dp)
                             )
                             Text(
-                                "Total Marks: ${quizzes[index].totalMarks}",
+                                "Total Marks: ${quizzes[index].totalMarks}%",
                                 fontSize = 15.sp,
                                 color = Color(0xFFFFFFFF),
                                 textAlign = TextAlign.Center,
