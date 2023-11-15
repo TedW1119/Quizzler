@@ -40,7 +40,7 @@ class QuizController {
 
         try {
             val request = HttpRequest.newBuilder()
-                .uri(URI.create("${Constants.BASE_URL}/quiz"))
+                .uri(URI.create("${Constants.BASE_URL}/quiz/generate"))
                 .header("Content-Type","application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(Json.encodeToString(quiz)))
                 .build()
