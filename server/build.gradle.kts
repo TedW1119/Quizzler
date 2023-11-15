@@ -34,4 +34,7 @@ dependencies {
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
     implementation("org.mongodb:mongodb-driver-kotlin-coroutine:4.11.0")
+    implementation(platform("com.aallam.openai:openai-client-bom:3.5.0"))
+    implementation("com.aallam.openai:openai-client")
+    implementation("io.ktor:ktor-client-okhttp")
 }

@@ -143,6 +143,22 @@ fun Application.quizRouting() {
             }
         }
 
+        // generate quiz (or update existing quiz)
+        post("/quiz/generate") {
+            try {
+                val quiz = call.receive<Quiz>()
+                // generate quiz contents
+                quizController.generateQuiz(quiz)
+                call.response.status(HttpStatusCode.Created)
+            } catch (e: ContentTransformationException) {
+                // Handle ContentTransformationException, which occurs when there's an issue with deserializing the request body
+                call.respond(HttpStatusCode.BadRequest, "Invalid request body format")
+            } catch (e: Exception) {
+                // Handle other exceptions that might occur during the processing of the request
+                call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
+            }
+        }
+
         // create quiz (or update existing quiz)
         post("/quiz") {
             try {
