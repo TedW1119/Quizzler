@@ -6,62 +6,78 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mongodb.kotlin.client.coroutine.MongoClient
 import composables.button
-import composables.slider
-import kotlinx.coroutines.runBlocking
+import controllers.QuizController
+import org.bson.types.ObjectId
+import pages.account.formField
+import utils.DataModels.Quiz
+
 //import utils.DataModels.Settings
 //import utils.DataModels.Quiz
 
-// Create data class to represent a MongoDB document
-data class Settings (val hints: Boolean,
-                     val bonus: Boolean,
-                     val time: Int)
-data class Quiz (val id: Int,
-                    val accountId: Int,
-                    val questionIds: List<Int>,
-                    val name: String,
-                    val subject: String,
-                    val difficulty: String,
-                    val settings: Settings,
-                    val totalMarks: Int)
+// Create object to store form data
+object QuizFormData {
+    // default values to prevent sending nulls
+    var quizName:String = ""
+    var quizSubject:String = ""
+    var questionDifficulty:String = "Easy"
+    var questionType:String = "MCQ"
+    var totalQuestions:Int = 5
+    var totalMarks:Double = 5.0
+    var hint:Boolean = false
+    var time:Int = 600 //seconds ?
+}
 
 @Composable
 @Preview
 fun quizCreation(changePage: (String) -> Unit) {
+    val quizForm = QuizFormData
+    val quizController = QuizController()
 
-    fun mongoCreate() {
-        // Replace the placeholder with your MongoDB deployment's connection string
-        val uri = "mongodb+srv://abnormally:distributed@abnormally-distributed.naumhbd.mongodb.net/?retryWrites=true&w=majority"
+    // track state of settings
+    var selectedQuestionCount by remember { mutableStateOf(5) }
+    var selectedDifficulty by remember { mutableStateOf("Easy") }
+    var selectedQuestionType by remember { mutableStateOf("MCQ") }
 
-        val mongoClient = MongoClient.create(uri)
-        val database = mongoClient.getDatabase("abnormally-distributed")
-        val collection = database.getCollection<Quiz>("quizzes")
-
-        runBlocking {
-            val result = collection.insertOne(
-                Quiz(2, 1, listOf(12, 213, 123), "test", "history", "easy", Settings(hints = true, bonus = true, 1), 11)
-            )
-        }
-
-        mongoClient.close()
+    fun handleCreateQuiz() {
+        val quiz = Quiz(
+            _id = ObjectId().toString(),
+            accountId = "654ea337eb947a7ceabb0643", // TODO change this to whoever is logged in
+            questionIds = mutableListOf<String>(), // ?
+            name = quizForm.quizName,
+            subject = quizForm.quizSubject,
+            difficulty = quizForm.questionDifficulty,
+            questionType = quizForm.questionType,
+            totalQuestions = quizForm.totalQuestions,
+            totalMarks = quizForm.totalMarks,
+            hint = quizForm.hint,
+            time = quizForm.time
+        )
+        quizController.upsertQuiz(quiz)
     }
 
-    // Callback for handling cancelling
+    // Callback for going back to upload
     fun handleCancel() {
-        changePage("Landing")
+        changePage("QuizUpload")
     }
 
-    // Callback for handling upload
+    // Callback for going back to landing page (after quiz created)
     fun handleNext() {
-        changePage("QuizUpload")
-        mongoCreate()
+        // note that the state remains the same, so the previous settings will still be the same as before when creating another quiz. TODO design decision on whether to keep this or not
+        // only name and subject being reset right now
+        handleCreateQuiz()
+        quizForm.quizName = ""
+        quizForm.quizSubject = ""
+        quizForm.totalQuestions = 5
+        quizForm.questionDifficulty = "Easy"
+        quizForm.questionType = "MCQ"
+        changePage("Landing")
     }
 
     // Overall Box
@@ -138,15 +154,39 @@ fun quizCreation(changePage: (String) -> Unit) {
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.Center
                                 ) {
-                                    Button(onClick = {}) {
+                                    Button(onClick = {
+                                        quizForm.totalQuestions = 5
+                                        quizForm.totalMarks = 5.0
+                                        println("set number of questions to 5")
+                                        selectedQuestionCount = 5
+                                    },
+                                        modifier = Modifier
+                                            .background(if (selectedQuestionCount == 5) Color.Blue else Color.Gray)
+                                    ) {
                                         Text("5")
                                     }
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Button(onClick = {}) {
+                                    Button(onClick = {
+                                        quizForm.totalQuestions = 10
+                                        quizForm.totalMarks = 10.0
+                                        println("set number of questions to 10")
+                                        selectedQuestionCount = 10
+                                    },
+                                        modifier = Modifier
+                                            .background(if (selectedQuestionCount == 10) Color.Blue else Color.Gray)
+                                    ) {
                                         Text("10")
                                     }
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Button(onClick = {}) {
+                                    Button(onClick = {
+                                        quizForm.totalQuestions = 20
+                                        quizForm.totalMarks = 20.0
+                                        println("set number of questions to 20")
+                                        selectedQuestionCount = 20
+                                    },
+                                        modifier = Modifier
+                                            .background(if (selectedQuestionCount == 20) Color.Blue else Color.Gray)
+                                    ) {
                                         Text("20")
                                     }
                                     Spacer(modifier = Modifier.width(8.dp))
@@ -173,7 +213,7 @@ fun quizCreation(changePage: (String) -> Unit) {
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 Text(
-                                    "Question Types",
+                                    "Question Difficulty",
                                     fontSize = 16.sp,
                                 )
                             }
@@ -187,15 +227,37 @@ fun quizCreation(changePage: (String) -> Unit) {
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.Center
                                 ) {
-                                    Button(onClick = {}, modifier = Modifier.background(Color.Green)) {
+                                    Button(
+                                        onClick = {
+                                            quizForm.questionDifficulty = "Easy";
+                                            println("set difficult of questions to Easy")
+                                            selectedDifficulty = "Easy"
+                                        },
+                                        modifier = Modifier
+                                            .background(if (selectedDifficulty == "Easy") Color.Green else Color.Gray)
+                                    ) {
                                         Text("Easy")
                                     }
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Button(onClick = {}, modifier = Modifier.background(Color.Yellow)) {
+                                    Button(onClick = {
+                                        quizForm.questionDifficulty = "Medium";
+                                        println("set difficult of questions to Medium")
+                                        selectedDifficulty = "Medium"
+                                    },
+                                        modifier = Modifier
+                                            .background(if (selectedDifficulty == "Medium") Color.Yellow else Color.Gray)
+                                    ) {
                                         Text("Medium")
                                     }
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Button(onClick = {}, modifier = Modifier.background(Color.Red)) {
+                                    Button(onClick = {
+                                        quizForm.questionDifficulty = "Hard";
+                                        println("set difficult of questions to Hard")
+                                        selectedDifficulty = "Hard"
+                                    },
+                                        modifier = Modifier
+                                            .background(if (selectedDifficulty == "Hard") Color.Red else Color.Gray)
+                                    ) {
                                         Text("Hard")
                                     }
                                 }
@@ -240,19 +302,47 @@ fun quizCreation(changePage: (String) -> Unit) {
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.Center
                                 ) {
-                                    Button(onClick = {}) {
+                                    Button(onClick = {
+                                        quizForm.questionType = "MCQ";
+                                        println("set question type to MCQ")
+                                        selectedQuestionType = "MCQ"
+                                    },
+                                        modifier = Modifier
+                                            .background(if (selectedQuestionType == "MCQ") Color.Blue else Color.Gray)
+                                    ) {
                                         Text("MCQ")
                                     }
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Button(onClick = {}) {
+                                    Button(onClick = {
+                                        quizForm.questionType = "MSQ";
+                                        println("set question type to MSQ")
+                                        selectedQuestionType = "MSQ"
+                                    },
+                                        modifier = Modifier
+                                            .background(if (selectedQuestionType == "MSQ") Color.Blue else Color.Gray)
+                                    ) {
                                         Text("MSQ")
                                     }
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Button(onClick = {}) {
+                                    Button(onClick = {
+                                        quizForm.questionType = "T/F";
+                                        println("set question type to T/F")
+                                        selectedQuestionType = "T/F"
+                                    },
+                                        modifier = Modifier
+                                            .background(if (selectedQuestionType == "T/F") Color.Blue else Color.Gray)
+                                    ) {
                                         Text("T/F")
                                     }
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Button(onClick = {}) {
+                                    Button(onClick = {
+                                        quizForm.questionType = "SA";
+                                        println("set question type to SA")
+                                        selectedQuestionType = "SA"
+                                    },
+                                        modifier = Modifier
+                                            .background(if (selectedQuestionType == "SA") Color.Blue else Color.Gray)
+                                    ) {
                                         Text("SA")
                                     }
                                 }
@@ -282,10 +372,32 @@ fun quizCreation(changePage: (String) -> Unit) {
                             // Options
                             Column(
                                 modifier = Modifier
-                                    .fillMaxHeight(),
+                                    .fillMaxHeight()
+                                    .offset(0.dp, 32.dp),
                                 verticalArrangement = Arrangement.Center,
                             ) {
-                                slider()
+                                Column(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    val fields = listOf(
+                                        "Name",
+                                        "Subject"
+                                    )
+
+                                    fun updateField(field: String, value: String) {
+                                        when (field) {
+                                            "Name" -> quizForm.quizName = value
+                                            "Subject" -> quizForm.quizSubject = value
+                                        }
+                                    }
+
+                                    fields.forEach {
+                                        field -> formField(field, false, ::updateField)
+                                        Spacer(modifier = Modifier.height(6.dp))
+                                    }
+
+                                }
                             }
                         }
                     }
