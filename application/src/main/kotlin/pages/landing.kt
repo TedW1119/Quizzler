@@ -28,8 +28,8 @@ fun landing(changePage: (String) -> Unit, accountId: String) {
     var isSettingsVisible by remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }
 
-    fun handleCreateQuiz() {
-        changePage("QuizCreation")
+    fun handleUploadQuiz() {
+        changePage("QuizUpload")
     }
     fun handleViewQuizzes() {
         changePage("QuizList")
@@ -107,7 +107,7 @@ fun landing(changePage: (String) -> Unit, accountId: String) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                button("Create a Quiz", true, ::handleCreateQuiz, Modifier.padding(100.dp))
+                button("Create a Quiz", true, ::handleUploadQuiz, Modifier.padding(100.dp))
                 button("View my Quizzes", true, ::handleViewQuizzes, Modifier.padding(100.dp))
 
             }

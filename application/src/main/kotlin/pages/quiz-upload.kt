@@ -12,12 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import composables.button
-import java.awt.FileDialog
 import java.io.File
-import java.awt.Frame
-import java.util.*
-import javax.swing.JFileChooser
-import javax.swing.filechooser.FileNameExtensionFilter
 
 @Composable
 @Preview
@@ -26,12 +21,12 @@ fun quizUpload(changePage: (String) -> Unit) {
 
     // Callback for handling cancelling
     fun handleCancel() {
-        changePage("QuizCreation")
+        changePage("Landing")
     }
 
-    // Callback for handling starting the quiz
-    fun handleStart() {
-        changePage("QuizUpload")
+    // Callback for going to quiz creation settings
+    fun handleQuizCreation() {
+        changePage("QuizCreation")
     }
 
     // Overall Box
@@ -58,7 +53,7 @@ fun quizUpload(changePage: (String) -> Unit) {
                     fontSize = 32.sp,
                 )
 
-                button("Next", true, ::handleStart)
+                button("Next", true, ::handleQuizCreation)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
