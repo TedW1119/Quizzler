@@ -69,12 +69,8 @@ fun Application.accountRouting() {
             val id = call.parameters["id"]
             if (id != null) {
                 try {
-                    val accountQuizzes = accountController.getAccountQuizzes(id)
-                    if (!accountQuizzes.isNullOrEmpty()) {
-                        call.respond(message = accountQuizzes, status = HttpStatusCode.OK)
-                    } else {
-                        call.respond(HttpStatusCode.NotFound, "Account quizzes not found")
-                    }
+                    val accountQuizzes = accountController.getAccountQuizzes(id) ?: emptyList()
+                    call.respond(message = accountQuizzes, status = HttpStatusCode.OK)
                 } catch (e: Exception) {
                     call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
                 }
