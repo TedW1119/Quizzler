@@ -34,7 +34,7 @@ class FileDialog {
         val fileDialog = FileDialog(frame, "Open File", FileDialog.LOAD)
         fileDialog.file = null // Clear the default file name
         fileDialog.isMultipleMode = false // Allow selecting only one file
-        fileDialog.setFile("*.pdf;*.pptx") // Filter for PDF and PPTX files only
+        fileDialog.setFile("*.pdf;*.pptx;*.txt") // Filter for PDF, PPTX, and TXT files only
         fileDialog.isVisible = true
         val selectedFile = fileDialog.file
         return if (selectedFile != null) File(fileDialog.directory, selectedFile) else null
@@ -45,7 +45,7 @@ class FileDialog {
         val fileChooser = JFileChooser()
         val filter = FileNameExtensionFilter(
             "PDF and PPTX Files",
-            "pdf", "pptx") // Filter for PDF and PPTX files only
+            "pdf", "pptx", "txt") // Filter for PDF, PPTX and TXT files only
         fileChooser.fileFilter = filter
         val result = fileChooser.showOpenDialog(null)
         return if (result == JFileChooser.APPROVE_OPTION) fileChooser.selectedFile else null
