@@ -50,6 +50,12 @@ fun login(changePage: (String, MutableMap<Any, Any>) -> Unit) {
         changePage("AccountCreation", data)
     }
 
+    // TODO: remove this function after testing
+    fun handleAutoLoginTEMP() {
+        data = mutableMapOf("accountId" to "654276f4bd672473259d1812")
+        changePage("Landing", data)
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -106,6 +112,10 @@ fun login(changePage: (String, MutableMap<Any, Any>) -> Unit) {
         Spacer(modifier = Modifier.height(16.dp))
 
         // TODO: DECIDE WHERE TO PLACE THIS BUTTON
-        button("I need an account this instant since this product is so amazing!", true, ::handleCreateAccount)
+        button("Create Account", true, ::handleCreateAccount)
+
+        // TODO: remove this button after testing
+        Spacer(modifier = Modifier.height(16.dp))
+        button("Auto-login (TEMP)", true, ::handleAutoLoginTEMP)
     }
 }

@@ -45,6 +45,26 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String) {
         changePage("Landing")
     }
     fun handleSaveChanges() {
+
+        // TODO: display errors on the UI
+        // Check for unique username and email
+        val existingUsername = accountController.getAccountFromLogin(accountData.username)
+        val existingEmail = accountController.getAccountFromLogin(accountData.email)
+        if (
+            (existingUsername != null && existingUsername._id != account._id) &&
+            (existingEmail != null && existingEmail._id != account._id)
+        ) {
+            println("An account with this username and this email exists")
+            return
+        } else if (existingUsername != null && existingUsername._id != account._id) {
+            println("An account with this username exists")
+            return
+        } else if (existingEmail != null && existingEmail._id != account._id) {
+            println("An account with this email exists")
+            return
+        }
+
+        // Save the account changes
         val payload = Account(
             account._id,
             accountData.name,

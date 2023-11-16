@@ -24,7 +24,7 @@ fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
     var data: MutableMap<Any, Any> = mutableMapOf()
 
     // Store form data and fields
-    var formData = AccountFormData
+    val formData = AccountFormData
     val fields = listOf(
         "Name",
         "Username",
@@ -33,9 +33,36 @@ fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
         "Confirm Password"
     )
 
+    // Handle returning to the login page
+    fun handleGoBack() {
+        changePage("Login", data)
+    }
+
     // Handle the login button press
     fun handleCreateAccount() {
-        // TODO: perform error checking here
+
+        // TODO: display the errors to the UI
+        // Check for matching passwords
+        if (formData.password != formData.confirmPassword) {
+            println("The password and confirmed password do not match")
+            return
+        }
+
+        // Check for unique username and email
+        val existingUsername = accountController.getAccountFromLogin(formData.username)
+        val existingEmail = accountController.getAccountFromLogin(formData.email)
+        if (existingUsername != null && existingEmail != null) {
+            println("An account with this username and this email exists")
+            return
+        } else if (existingUsername != null) {
+            println("An account with this username exists")
+            return
+        } else if (existingEmail != null) {
+            println("An account with this email exists")
+            return
+        }
+
+        // Create the account
         val accountId = ObjectId().toString()
         val account = Account(
             accountId,
@@ -75,5 +102,9 @@ fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
         }
 
         button("Create Account", true, ::handleCreateAccount)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        button("Return to Login", true, ::handleGoBack)
     }
 }
