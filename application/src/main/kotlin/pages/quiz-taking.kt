@@ -4,7 +4,6 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.RadioButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -36,17 +35,16 @@ fun getQuestion(id: String): Question {
 
 fun updateQuiz(quiz: Quiz): String {
     val quizSerialized = Json.encodeToString(quiz)
-    val client = HttpClient.newBuilder().build();
+    val client = HttpClient.newBuilder().build()
     val request = HttpRequest.newBuilder()
         .uri(URI.create("${BASE_URL}/quiz"))
         .header("Content-Type", "application/json")
         .POST(HttpRequest.BodyPublishers.ofString(quizSerialized))
         .build()
-    val response = client.send(request, HttpResponse.BodyHandlers.ofString());
+    val response = client.send(request, HttpResponse.BodyHandlers.ofString())
     return response.body()
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 @Preview
 fun quizTaking(changePage: (String, MutableMap<Any, Any>) -> Unit, data: MutableMap<Any, Any>) {
