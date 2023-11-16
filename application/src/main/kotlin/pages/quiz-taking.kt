@@ -3,13 +3,17 @@ package pages
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.RadioButton
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import composables.alertDialog
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import utils.Constants.BASE_URL
@@ -200,59 +204,26 @@ fun quizTaking(changePage: (String, MutableMap<Any, Any>) -> Unit, data: Mutable
 
     if (showSubmitDialog) {
         val numCompleted = answers.count { it != null }
-        AlertDialog(
-            onDismissRequest = { showSubmitDialog = false },
-            title = { Text("Are you sure you want to submit the quiz?") },
-            text = { Text("You have completed ${numCompleted}/${quiz.questionIds.size} questions") },
-            buttons = {
-                Row (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 16.dp, bottom = 8.dp),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    OutlinedButton(
-                        onClick = { showSubmitDialog = false },
-                    ) {
-                        Text("Cancel")
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Button(
-                        onClick = ::handleSubmit,
-                    ) {
-                        Text("Submit")
-                    }
-                }
-            }
+        alertDialog(
+            setShowDialog = { showSubmitDialog = false },
+            title = "Are you sure you want to submit the quiz?",
+            content = "You have completed ${numCompleted}/${quiz.questionIds.size} questions.",
+            primaryButtonText = "Submit",
+            handlePrimaryButton = ::handleSubmit,
+            secondaryButtonText = "Cancel",
+            handleSecondaryButton = { showSubmitDialog = false }
         )
     }
 
     if (showExitDialog) {
-        AlertDialog(
-            onDismissRequest = { showExitDialog = false },
-            title = { Text("Are you sure you want to leave the quiz?") },
-            buttons = {
-                Row (
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = 16.dp, bottom = 8.dp, top = 8.dp),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    OutlinedButton(
-                        onClick = { showExitDialog = false },
-                    ) {
-                        Text("Cancel")
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Button(
-                        onClick = ::handleExitQuiz,
-                    ) {
-                        Text("Exit")
-                    }
-                }
-            }
+        alertDialog(
+            setShowDialog = { showExitDialog = false },
+            title = "Are you sure you want to leave the quiz?",
+            content = "Your result will not be saved.",
+            primaryButtonText = "Exit",
+            handlePrimaryButton = ::handleExitQuiz,
+            secondaryButtonText = "Cancel",
+            handleSecondaryButton = { showExitDialog = false }
         )
     }
 }
