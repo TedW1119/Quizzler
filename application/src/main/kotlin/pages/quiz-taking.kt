@@ -98,11 +98,14 @@ fun quizTaking(changePage: (String, MutableMap<Any, Any>) -> Unit, data: Mutable
                 modifier = Modifier.fillMaxWidth().background(Color.LightGray).padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = questions[questionIndex].question,
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
+                Box(modifier = Modifier.weight(1f)) {
+                    Text(
+                        text = questions[questionIndex].question,
+                        fontSize = 20.sp,
+                        modifier = Modifier.padding(bottom = 16.dp),
+                        softWrap = true
+                    )
+                }
                 Column(
                     modifier = Modifier
                         .background(Color.LightGray)
