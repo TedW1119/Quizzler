@@ -1,10 +1,7 @@
 package pages
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.*
@@ -37,7 +34,6 @@ fun getQuizList(accountId: String): List<Quiz> {
 
 @Composable
 fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: String) {
-    // TODO: remove hard code
     val quizzes = getQuizList(accountId)
     val quizController = QuizController()
 
@@ -51,6 +47,11 @@ fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: Stri
     fun handleExitQuizList() {
         val newData: MutableMap<Any, Any> = mutableMapOf()
         changePage("Landing", newData)
+    }
+
+    fun handleUploadQuiz() {
+        val newData: MutableMap<Any, Any> = mutableMapOf()
+        changePage("QuizUpload", newData)
     }
 
     Scaffold(
@@ -74,52 +75,66 @@ fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: Stri
                 bottom = 50.dp
             ),
             content = {
-                items(quizzes.size) { index ->
-                    Card(
-                        backgroundColor = Color.LightGray,
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .fillMaxWidth()
-                            .clickable( onClick = { handleQuizTaking(quizzes[index]) } ),
-                        elevation = 16.dp,
-                    ) {
-                        Column( // Use a Column to stack Texts vertically
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.padding(5.dp)
+                if (quizzes.isNotEmpty()) {
+                    items(quizzes.size) { index ->
+                        Card(
+                            backgroundColor = Color.LightGray,
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .fillMaxWidth()
+                                .clickable( onClick = { handleQuizTaking(quizzes[index]) } ),
+                            elevation = 16.dp,
                         ) {
-                            Text(
-                                quizzes[index].name,
-                                fontSize = 25.sp,
-                                color = Color(0xFFFFFFFF),
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(8.dp)
-                            )
-                            Text(
-                                "Subject: ${quizzes[index].subject}",
-                                fontSize = 15.sp,
-                                color = Color(0xFFFFFFFF),
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(2.dp)
-                            )
-                            Text(
-                                "Difficulty: ${quizzes[index].difficulty}",
-                                fontSize = 15.sp,
-                                color = Color(0xFFFFFFFF),
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(2.dp)
-                            )
-                            Text(
-                                "Total Marks: ${quizzes[index].totalMarks}%",
-                                fontSize = 15.sp,
-                                color = Color(0xFFFFFFFF),
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(2.dp)
-                            )
+                            Column( // Use a Column to stack Texts vertically
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(5.dp)
+                            ) {
+                                Text(
+                                    quizzes[index].name,
+                                    fontSize = 25.sp,
+                                    color = Color(0xFFFFFFFF),
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.padding(8.dp)
+                                )
+                                Text(
+                                    "Subject: ${quizzes[index].subject}",
+                                    fontSize = 15.sp,
+                                    color = Color(0xFFFFFFFF),
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.padding(2.dp)
+                                )
+                                Text(
+                                    "Difficulty: ${quizzes[index].difficulty}",
+                                    fontSize = 15.sp,
+                                    color = Color(0xFFFFFFFF),
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.padding(2.dp)
+                                )
+                                Text(
+                                    "Total Marks: ${quizzes[index].totalMarks}%",
+                                    fontSize = 15.sp,
+                                    color = Color(0xFFFFFFFF),
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.padding(2.dp)
+                                )
 
-                            fun deleteQuiz() {
-                                quizController.deleteQuiz(quizzes[index]._id)
+                                fun deleteQuiz() {
+                                    quizController.deleteQuiz(quizzes[index]._id)
+                                }
+                                button("Delete Quiz", true, ::deleteQuiz)
                             }
-                            button("Delete Quiz", true, ::deleteQuiz)
+                        }
+                    }
+                } else {
+                    items(1) {
+                        Column (
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Text("You have not created any quizzes. Click below to create a quiz.")
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Button(onClick = ::handleUploadQuiz) {
+                                Text("Create a Quiz")
+                            }
                         }
                     }
                 }

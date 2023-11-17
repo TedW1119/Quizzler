@@ -2,19 +2,14 @@ package pages.account
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.OutlinedTextField
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.material.Text
-import androidx.compose.runtime.*
-import com.mongodb.kotlin.client.coroutine.MongoClient
 import composables.button
 import controllers.AccountController
-import kotlinx.coroutines.runBlocking
 import org.bson.types.ObjectId
 import utils.DataModels.Account
-
 
 
 @Composable
@@ -97,7 +92,7 @@ fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
     ) {
 
         fields.forEach {
-            field -> formField(field, false, ::updateField)
+                field -> formField(field, true, ::updateField)
             Spacer(modifier = Modifier.height(24.dp))
         }
 
