@@ -16,4 +16,5 @@ fun Application.module() {
     quizRouting()
     questionRouting()
     accountRouting()
+    noteRouting()
 }

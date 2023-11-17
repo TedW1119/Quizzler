@@ -20,7 +20,8 @@ object DataModels {
         val totalQuestions: Int,
         val totalMarks: Double,
         val hint: Boolean,
-        val time: Int
+        val time: Int,
+        val noteId: String
     )
 
     @Serializable
@@ -34,6 +35,14 @@ object DataModels {
         val hint: String?,
         val marks: Int,
         val answer: String
+    )
+
+    @Serializable
+    data class Note(
+        @BsonId
+        @BsonRepresentation(BsonType.OBJECT_ID)
+        val _id: String,
+        val text: String
     )
 
     @Serializable

@@ -8,19 +8,24 @@ import com.aallam.openai.client.OpenAI
 import kotlinx.serialization.json.Json
 import org.bson.types.ObjectId
 import services.QuizService
-import util.Constants.SAMPLE_TEXT
 import util.DataModels.Question
 import util.DataModels.Quiz
 
 class QuizController {
     private val questionController: QuestionController = QuestionController()
+    private val noteController: NoteController = NoteController()
     private val quizService: QuizService = QuizService()
 
     @OptIn(LegacyOpenAI::class)
     suspend fun generateQuiz(quiz: Quiz) {
-        // TODO: Given txt
         // TODO: THIS WORKS FOR MCQ and T/F Only
-        val text = SAMPLE_TEXT
+        val note = noteController.getNote(quiz.noteId)
+
+        if (note == null) {
+            // throw
+            return
+        }
+        val text = note.text
 
         val openAI = OpenAI("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")
 

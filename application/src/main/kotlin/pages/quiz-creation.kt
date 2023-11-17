@@ -36,7 +36,7 @@ object QuizFormData {
 
 @Composable
 @Preview
-fun quizCreation(changePage: (String) -> Unit, accountId: String) {
+fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String) {
     val quizForm = QuizFormData
     val quizController = QuizController()
 
@@ -57,7 +57,8 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String) {
             totalQuestions = quizForm.totalQuestions,
             totalMarks = quizForm.totalMarks,
             hint = quizForm.hint,
-            time = quizForm.time
+            time = quizForm.time,
+            noteId = noteId
         )
         quizController.upsertQuiz(quiz)
     }

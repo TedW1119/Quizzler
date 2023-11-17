@@ -1,6 +1,7 @@
 package plugins
 
 import controllers.AccountController
+import controllers.NoteController
 import controllers.QuestionController
 import controllers.QuizController
 import io.ktor.http.*
@@ -11,6 +12,7 @@ import io.ktor.server.routing.*
 import util.DataModels
 import util.DataModels.Account
 import util.DataModels.Quiz
+import util.DataModels.Note
 
 
 fun Application.configureRouting() {
@@ -224,6 +226,28 @@ fun Application.questionRouting() {
             } catch (e: ContentTransformationException) {
                 call.respond(HttpStatusCode.BadRequest, "Invalid request body format")
             } catch (e: Exception) {
+                call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
+            }
+        }
+    }
+}
+
+// Note API
+fun Application.noteRouting() {
+    val noteController = NoteController()
+    routing {
+        // create note (or update existing note)
+        post("/note") {
+            try {
+                val note = call.receive<Note>()
+                // store in database
+                noteController.createNote(note)
+                call.response.status(HttpStatusCode.Created)
+            } catch (e: ContentTransformationException) {
+                // Handle ContentTransformationException, which occurs when there's an issue with deserializing the request body
+                call.respond(HttpStatusCode.BadRequest, "Invalid request body format")
+            } catch (e: Exception) {
+                // Handle other exceptions that might occur during the processing of the request
                 call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
             }
         }
