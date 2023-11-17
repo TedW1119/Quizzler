@@ -32,7 +32,7 @@ fun main() = application {
             "Login" -> login(::changePage)
             "AccountCreation" -> accountCreation(::changePage)
             "Landing" -> landing(::changePage, data["accountId"] as String)
-            "QuizCreation" -> quizCreation(::changePage, data["accountId"] as String)
+            "QuizCreation" -> quizCreation(::changePage, data["accountId"] as String, data["noteTextId"] as String)
             "QuizList" -> quizList(::changePage, data["accountId"] as String)
             "QuizTaking" -> quizTaking(::changePage, data)
             "QuizResult" -> quizResult(::changePage, data)

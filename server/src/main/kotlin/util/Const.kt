@@ -7,6 +7,7 @@ object Constants {
     const val QUIZ_COLLECTION = "quizzes"
     const val QUESTION_COLLECTION = "questions"
     const val ACCOUNT_COLLECTION = "accounts"
+    const val NOTE_COLLECTION = "notes"
     const val SAMPLE_TEXT = "Operating Systems - CS350 Guide\n" +
             "\n" +
             "\n" +
