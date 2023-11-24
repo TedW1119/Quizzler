@@ -1,22 +1,27 @@
 package pages.account
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import composables.button
+import composables.*
 import controllers.AccountController
 import org.bson.types.ObjectId
 import utils.DataModels.Account
-
 
 @Composable
 @Preview
 fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
     val accountController: AccountController = AccountController()
     var data: MutableMap<Any, Any> = mutableMapOf()
+
+    // Track error state
+    var showErrorDialog by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf("") }
 
     // Store form data and fields
     val formData = AccountFormData
@@ -28,18 +33,18 @@ fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
         "Confirm Password"
     )
 
-    // Handle returning to the login page
+    // Handle going back to login page
     fun handleGoBack() {
         changePage("Login", data)
     }
 
-    // Handle the login button press
+    // Handle creating a new account
     fun handleCreateAccount() {
 
-        // TODO: display the errors to the UI
         // Check for matching passwords
         if (formData.password != formData.confirmPassword) {
-            println("The password and confirmed password do not match")
+            error = "The password and confirmed password do not match."
+            showErrorDialog = true
             return
         }
 
@@ -47,13 +52,16 @@ fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
         val existingUsername = accountController.getAccountFromLogin(formData.username)
         val existingEmail = accountController.getAccountFromLogin(formData.email)
         if (existingUsername != null && existingEmail != null) {
-            println("An account with this username and this email exists")
+            error = "An account with this username and this email exists."
+            showErrorDialog = true
             return
         } else if (existingUsername != null) {
-            println("An account with this username exists")
+            error = "An account with this username exists."
+            showErrorDialog = true
             return
         } else if (existingEmail != null) {
-            println("An account with this email exists")
+            error = "An account with this email exists."
+            showErrorDialog = true
             return
         }
 
@@ -85,21 +93,34 @@ fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
         }
     }
 
+    // Render UI
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().background(Color(0xFFCBC3E3)),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         fields.forEach {
-                field -> formField(field, true, ::updateField)
+            field -> formField(field, true, ::updateField)
             Spacer(modifier = Modifier.height(24.dp))
         }
 
-        button("Create Account", true, ::handleCreateAccount)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            secondaryButton("Return to Login", ::handleGoBack)
+            Spacer(modifier = Modifier.width(20.dp))
 
-        Spacer(modifier = Modifier.height(16.dp))
+            primaryButton("Create Account", ::handleCreateAccount)
+        }
+    }
 
-        button("Return to Login", true, ::handleGoBack)
+    // Render dialogs
+    if (showErrorDialog) {
+        errorDialog("Error Creating Account", error) {
+            showErrorDialog = false
+            error = ""
+        }
     }
 }

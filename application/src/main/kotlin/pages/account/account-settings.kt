@@ -15,21 +15,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role.Companion.Image
 import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.coroutine.MongoClient
-import composables.button
-import composables.dropdown
+import composables.*
 import controllers.AccountController
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import org.bson.types.ObjectId
 import utils.DataModels.Account
 
-//import utils.DataModels.Account
-
 @Composable
 @Preview
 fun accountSettings(changePage: (String) -> Unit, accountId: String) {
     val accountController: AccountController = AccountController()
     val account = accountController.getAccount(accountId) ?: return
+
+    // Track error state
+    var showErrorDialog by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf("") }
 
     // Display account data, and store changes
     val accountData = AccountSettingsFormData(
@@ -40,13 +41,14 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String) {
         account.profilePicId
     )
 
-    // Handle button presses
+    // Handle return to Landing page
     fun handleCancel() {
         changePage("Landing")
     }
+
+    // Handle saving account changes
     fun handleSaveChanges() {
 
-        // TODO: display errors on the UI
         // Check for unique username and email
         val existingUsername = accountController.getAccountFromLogin(accountData.username)
         val existingEmail = accountController.getAccountFromLogin(accountData.email)
@@ -54,13 +56,16 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String) {
             (existingUsername != null && existingUsername._id != account._id) &&
             (existingEmail != null && existingEmail._id != account._id)
         ) {
-            println("An account with this username and this email exists")
+            error = "An account with this username and this email exists."
+            showErrorDialog = true
             return
         } else if (existingUsername != null && existingUsername._id != account._id) {
-            println("An account with this username exists")
+            error = "An account with this username exists."
+            showErrorDialog = true
             return
         } else if (existingEmail != null && existingEmail._id != account._id) {
-            println("An account with this email exists")
+            error = "An account with this email exists."
+            showErrorDialog = true
             return
         }
 
@@ -90,7 +95,7 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String) {
         }
     }
 
-    // Render the UI
+    // Render UI
     Box(Modifier.fillMaxSize().padding(15.dp)) {
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
 
@@ -125,13 +130,20 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String) {
             // Cancel and save buttons
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Box(modifier = Modifier.weight(1f).padding(10.dp), contentAlignment = Alignment.CenterEnd) {
-                    button("Cancel", false, ::handleCancel)
+                    secondaryButton("Cancel", ::handleCancel)
                 }
                 Box(modifier = Modifier.weight(1f).padding(10.dp), contentAlignment = Alignment.CenterStart) {
-                    button("Save Changes", true, ::handleSaveChanges)
+                    primaryButton("Save Changes", ::handleSaveChanges)
                 }
             }
         }
     }
 
+    // Render dialogs
+    if (showErrorDialog) {
+        errorDialog("Error Saving Changes", error) {
+            showErrorDialog = false
+            error = ""
+        }
+    }
 }
