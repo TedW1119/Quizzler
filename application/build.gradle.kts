@@ -24,6 +24,7 @@ dependencies {
     implementation("org.mongodb:mongodb-driver-kotlin-coroutine:4.11.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
     implementation("org.slf4j:slf4j-simple:2.0.7")
+    implementation("org.apache.pdfbox:pdfbox:2.0.30")
 
     testImplementation(kotlin("test"))
 }
