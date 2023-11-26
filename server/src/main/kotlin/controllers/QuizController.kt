@@ -27,6 +27,18 @@ class QuizController {
         }
         val text = note.text
 
+        // Select difficulty
+        val difficultyPrompt = when (quiz.difficulty) {
+            "Easy" -> "Also, write me this question as if I was in Grade 1, as in elementary school, so make it easy difficulty."
+            "Medium" -> "Also, write me this question as if I was in Grade 9, as in high school, so make it medium difficulty."
+            else -> "Also, write me this question as if I was in University Year One, as in university or college, so make it hard difficulty."
+        }
+        val difficultyLength = when (quiz.difficulty) {
+            "Easy" -> "10"
+            "Medium" -> "15"
+            else -> "20"
+        }
+
         val openAI = OpenAI("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")
 
         // Attempt to Generate Question:
@@ -42,7 +54,7 @@ class QuizController {
                 val completionRequest = CompletionRequest(
                     model = ModelId("text-davinci-003"),
                     prompt = "Given the sample text: \n" + text + "\n \n" +
-                            "Now, create ${quiz.totalQuestions} multiple choice question(s). Store them in a JSON of the following type: data class Question( val _id: String, val question: String, val type: String, val options: List<String>, val hint: String,  marks: Int, val answer: String ) Only worry about the question, options, and answer fields, and keep the question and options as concise as possible (less than 10 words each). Follow this example for ${quiz.totalQuestions} multiple choice questions, but an example of one multiple choice question stored in the JSON (remember to append the JSON correctly for more than one question) is:" + """ [ { "_id": "1", "question": "What is the primary role of an operating system?", "type": "MCQ", "options": ["Run applications", "Manage hardware resources", "Create virtual CPUs", "Handle file operations"], "hint": "", "marks": 0, "answer": "Manage hardware resources" } ] """,
+                            "Now, create ${quiz.totalQuestions} multiple choice question(s). Store them in a JSON of the following type: data class Question( val _id: String, val question: String, val type: String, val options: List<String>, val hint: String,  marks: Int, val answer: String ) Only worry about the question, options, and answer fields, and keep the question and options as concise as possible (less than $difficultyLength words each). Follow this example for ${quiz.totalQuestions} multiple choice questions, but an example of one multiple choice question stored in the JSON (remember to append the JSON correctly for more than one question) is:" + """ [ { "_id": "1", "question": "What is the primary role of an operating system?", "type": "MCQ", "options": ["Run applications", "Manage hardware resources", "Create virtual CPUs", "Handle file operations"], "hint": "", "marks": 0, "answer": "Manage hardware resources" } ] $difficultyPrompt""",
                     maxTokens = 300,
                     temperature = 0.02
                 )
@@ -57,7 +69,7 @@ class QuizController {
                 val completionRequest = CompletionRequest(
                     model = ModelId("text-davinci-003"),
                     prompt = "Given the sample text: \n" + text + "\n \n" +
-                            "Now, create ${quiz.totalQuestions} true and false question(s). Store them in a JSON of the following type: data class Question( val _id: String, val question: String, val type: String, val options: List<String>, val hint: String,  marks: Int, val answer: String ) Only worry about the question, options, and answer fields, and keep the question and options as concise as possible (less than 10 words each). Follow this example for ${quiz.totalQuestions} multiple choice questions, but an example of one true and false question stored in the JSON (remember to append the JSON correctly for more than one question) is:" + """ [ { "_id": "1", "question": "An operating system is responsible for running applications.", "type": "T/F", "options": ["True", "False"], "hint": "", "marks": 0, "answer": "False" } ] """,
+                            "Now, create ${quiz.totalQuestions} true and false question(s). Store them in a JSON of the following type: data class Question( val _id: String, val question: String, val type: String, val options: List<String>, val hint: String,  marks: Int, val answer: String ) Only worry about the question, options, and answer fields, and keep the question and options as concise as possible (less than $difficultyLength words each). Follow this example for ${quiz.totalQuestions} multiple choice questions, but an example of one true and false question stored in the JSON (remember to append the JSON correctly for more than one question) is:" + """ [ { "_id": "1", "question": "An operating system is responsible for running applications.", "type": "T/F", "options": ["True", "False"], "hint": "", "marks": 0, "answer": "False" } ] $difficultyPrompt""",
                     maxTokens = 300,
                     temperature = 0.02
                 )

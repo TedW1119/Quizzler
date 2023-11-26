@@ -34,7 +34,7 @@ class FileDialog {
         val fileDialog = FileDialog(frame, "Open File", FileDialog.LOAD)
         fileDialog.file = null // Clear the default file name
         fileDialog.isMultipleMode = false // Allow selecting only one file
-        fileDialog.setFile("*.txt, *.pdf") // Filter for TXT and PDF files only
+        fileDialog.setFile("*.txt; *.pdf") // Filter for TXT and PDF files only
         fileDialog.isVisible = true
         val selectedFile = fileDialog.file
         return if (selectedFile != null) File(fileDialog.directory, selectedFile) else null
