@@ -12,10 +12,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import utils.getProfilePic
 
 
 @Composable
-fun menubar(sidebarClick: () -> Unit, settingsClick: () -> Unit) {
+fun menubar(sidebarClick: () -> Unit, settingsClick: () -> Unit, profilePicId: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -50,7 +51,7 @@ fun menubar(sidebarClick: () -> Unit, settingsClick: () -> Unit) {
                 .clickable { settingsClick() }
         ) {
             Image(
-                painter = painterResource("pfp_tmp.svg"),
+                painter = painterResource(getProfilePic(profilePicId)),
                 contentDescription = "profile menu",
                 modifier = Modifier.fillMaxWidth()
             )

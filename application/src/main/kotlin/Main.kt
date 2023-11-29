@@ -31,13 +31,13 @@ fun main() = application {
         when (currentPage) {
             "Login" -> login(::changePage)
             "AccountCreation" -> accountCreation(::changePage)
-            "Landing" -> landing(::changePage, data["accountId"] as String)
+            "Landing" -> landing(::changePage, data["accountId"] as String, data["profilePicId"] as Int)
             "QuizCreation" -> quizCreation(::changePage, data["accountId"] as String, data["noteTextId"] as String)
             "QuizList" -> quizList(::changePage, data["accountId"] as String)
             "QuizTaking" -> quizTaking(::changePage, data)
             "QuizResult" -> quizResult(::changePage, data)
             "QuizUpload" -> quizUpload(::changePage)
-            "AccountSettings" -> accountSettings(::changePage, data["accountId"] as String)
+            "AccountSettings" -> accountSettings(::changePage, data["accountId"] as String, data["profilePicId"] as Int)
         }
     }
 }

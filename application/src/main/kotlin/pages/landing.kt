@@ -17,13 +17,17 @@ import composables.settingsOverlay
 import composables.sidebar
 import controllers.AccountController
 import utils.DataModels.Account
+import kotlin.random.Random
 
 @Composable
 @Preview
-fun landing(changePage: (String) -> Unit, accountId: String) {
+fun landing(changePage: (String) -> Unit, accountId: String, profilePicId: Int) {
+
+    // Query account data
     val accountController: AccountController = AccountController()
     val account = accountController.getAccount(accountId) ?: return
     val username = account.name
+
     var isSidebarVisible by remember { mutableStateOf(false) }
     var isSettingsVisible by remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }
@@ -53,7 +57,11 @@ fun landing(changePage: (String) -> Unit, accountId: String) {
             }
     )
     {
-        menubar(sidebarClick = { isSidebarVisible = !isSidebarVisible }, settingsClick = { isSettingsVisible = !isSettingsVisible })
+        menubar(
+            sidebarClick = { isSidebarVisible = !isSidebarVisible },
+            settingsClick = { isSettingsVisible = !isSettingsVisible },
+            profilePicId
+        )
 
         // sidebar
         Box(

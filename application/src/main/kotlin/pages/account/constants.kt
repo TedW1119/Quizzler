@@ -8,7 +8,6 @@ object AccountFormData {
     var password: String = ""
     var confirmPassword: String = ""
     var educationLevel: String = ""
-    var profilePictureId: String = ""
 }
 
 // Form data for AccountSettings
@@ -16,8 +15,7 @@ class AccountSettingsFormData(
     var name: String,
     var username: String,
     var email: String,
-    var educationLevel: String,
-    var profilePictureId: String
+    var educationLevel: String
 ) {
 }
 
