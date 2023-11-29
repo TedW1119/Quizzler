@@ -54,7 +54,6 @@ object DataModels {
         val username: String,
         val email: String,
         val password: String,
-        val educationLevel: String,
-        val profilePicId: String
+        val educationLevel: String
     )
 }

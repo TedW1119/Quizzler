@@ -2,6 +2,7 @@ package pages.account
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.Alignment
@@ -10,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role.Companion.Image
@@ -21,11 +23,12 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import org.bson.types.ObjectId
 import utils.DataModels.Account
+import utils.getProfilePic
 
 @Composable
 @Preview
-fun accountSettings(changePage: (String) -> Unit, accountId: String) {
-    val accountController: AccountController = AccountController()
+fun accountSettings(changePage: (String) -> Unit, accountId: String, profilePicId: Int) {
+    val accountController = AccountController()
     val account = accountController.getAccount(accountId) ?: return
 
     // Track error state
@@ -37,8 +40,7 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String) {
         account.name,
         account.username,
         account.email,
-        account.educationLevel,
-        account.profilePicId
+        account.educationLevel
     )
 
     // Handle return to Landing page
@@ -76,8 +78,7 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String) {
             accountData.username,
             accountData.email,
             account.password,
-            accountData.educationLevel,
-            accountData.profilePictureId
+            accountData.educationLevel
         )
         accountController.upsertAccount(payload)
         // TODO: show confirmation modal, show success message
@@ -91,18 +92,17 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String) {
             "Username" -> accountData.username = value
             "Email" -> accountData.email = value
             "Education Level" -> accountData.educationLevel = value
-            "Profile Picture" -> accountData.profilePictureId = value
         }
     }
 
     // Render UI
-    Box(Modifier.fillMaxSize().padding(15.dp)) {
+    Box(Modifier.fillMaxSize().background(Color(0xFFCBC3E3))) {
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
 
             // Avatar
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 Image(
-                    painter = painterResource("hamburger.png"),
+                    painter = painterResource(getProfilePic(profilePicId)),
                     contentDescription = null,
                     contentScale = ContentScale.Fit,
                     modifier = Modifier.height(150.dp).width(150.dp).clip(CircleShape)

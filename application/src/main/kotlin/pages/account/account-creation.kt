@@ -12,12 +12,14 @@ import composables.*
 import controllers.AccountController
 import org.bson.types.ObjectId
 import utils.DataModels.Account
+import utils.NUM_PFP
+import kotlin.random.Random
 
 @Composable
 @Preview
 fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
-    val accountController: AccountController = AccountController()
-    var data: MutableMap<Any, Any> = mutableMapOf()
+    val accountController = AccountController()
+    val data: MutableMap<Any, Any> = mutableMapOf()
 
     // Track error state
     var showErrorDialog by remember { mutableStateOf(false) }
@@ -73,11 +75,11 @@ fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
             formData.username,
             formData.email,
             formData.password,
-            "testSchool",
-            "testPicId"
+            "testSchool"
         )
         accountController.upsertAccount(account)
-        data = mutableMapOf("accountId" to accountId)
+        data["accountId"] = accountId
+        data["profilePicId"] = Random.nextInt(0, NUM_PFP)
         changePage("Landing", data)
     }
 

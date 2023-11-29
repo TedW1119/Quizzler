@@ -8,28 +8,25 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.mongodb.client.model.Filters
-import com.mongodb.kotlin.client.coroutine.MongoClient
 import composables.button
 import composables.errorDialog
 import composables.primaryButton
 import composables.secondaryButton
 import controllers.AccountController
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.runBlocking
+import utils.NUM_PFP
+import kotlin.random.Random
 
 @Composable
 @Preview
 fun login(changePage: (String, MutableMap<Any, Any>) -> Unit) {
-    val accountController: AccountController = AccountController()
-    var data: MutableMap<Any, Any> = mutableMapOf()
+    val accountController = AccountController()
+    val data: MutableMap<Any, Any> = mutableMapOf()
 
     // Track the input field values
     var identifier by remember { mutableStateOf("") }
@@ -49,7 +46,8 @@ fun login(changePage: (String, MutableMap<Any, Any>) -> Unit) {
             error = "The password is incorrect."
             showErrorDialog = true
         } else {
-            data = mutableMapOf("accountId" to account._id)
+            data["accountId"] = account._id
+            data["profilePicId"] = Random.nextInt(0, NUM_PFP)
             changePage("Landing", data)
         }
     }
@@ -61,7 +59,8 @@ fun login(changePage: (String, MutableMap<Any, Any>) -> Unit) {
 
     // TODO: remove this function after testing
     fun handleAutoLoginTEMP() {
-        data = mutableMapOf("accountId" to "654276f4bd672473259d1812")
+        data["accountId"] = "654276f4bd672473259d1812"
+        data["profilePicId"] = Random.nextInt(0, NUM_PFP)
         changePage("Landing", data)
     }
 
