@@ -63,6 +63,10 @@ fun landing(changePage: (String) -> Unit, accountId: String, profilePicId: Int) 
             profilePicId
         )
 
+        // TODO Ideas for what to do with the sidebar and/or hamburger !
+        //  #1 have a button that re-picks your profile photo
+        //  #2 have a button that changes to light/dark mode. will require different themes
+        //  #3
         // sidebar
         Box(
             modifier = Modifier

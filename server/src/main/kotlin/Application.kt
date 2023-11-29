@@ -1,4 +1,6 @@
 import controllers.AccountController
+import controllers.NoteController
+import controllers.QuestionController
 import controllers.QuizController
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -13,12 +15,14 @@ fun main() {
 fun Application.module() {
     val quizController = QuizController()
     val accountController = AccountController()
+    val questionController = QuestionController()
+    val noteController = NoteController()
     configureSecurity()
     configureSockets()
     configureSerialization()
     configureRouting()
     quizRouting(quizController)
-    questionRouting()
+    questionRouting(questionController)
     accountRouting(accountController)
-    noteRouting()
+    noteRouting(noteController)
 }
