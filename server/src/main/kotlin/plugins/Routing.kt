@@ -118,7 +118,7 @@ fun Application.accountRouting(accountController: AccountController) {
     }
 }
 
-// Quiz API                     TODO LOG ERROR ITEMS
+// Quiz API
 fun Application.quizRouting(quizController: QuizController) {
 //    val quizController = QuizController()
     routing {
@@ -197,8 +197,8 @@ fun Application.quizRouting(quizController: QuizController) {
 }
 
 // Question API
-fun Application.questionRouting() {
-    val questionController = QuestionController()
+fun Application.questionRouting(questionController: QuestionController) {
+    //val questionController = QuestionController()
     routing {
         get("/question/{id}") {
             val id = call.parameters["id"]
@@ -233,8 +233,8 @@ fun Application.questionRouting() {
 }
 
 // Note API
-fun Application.noteRouting() {
-    val noteController = NoteController()
+fun Application.noteRouting(noteController: NoteController) {
+    //val noteController = NoteController()
     routing {
         // create note (or update existing note)
         post("/note") {
