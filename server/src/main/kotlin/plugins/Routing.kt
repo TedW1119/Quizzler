@@ -24,8 +24,8 @@ fun Application.configureRouting() {
 }
 
 // Account API
-fun Application.accountRouting() {
-    val accountController = AccountController()
+fun Application.accountRouting(accountController: AccountController) {
+    //val accountController = AccountController()
     routing {
 
         // Get an account
@@ -119,8 +119,8 @@ fun Application.accountRouting() {
 }
 
 // Quiz API                     TODO LOG ERROR ITEMS
-fun Application.quizRouting() {
-    val quizController = QuizController()
+fun Application.quizRouting(quizController: QuizController) {
+//    val quizController = QuizController()
     routing {
         // get quiz
         get("/quiz/{id}") {
