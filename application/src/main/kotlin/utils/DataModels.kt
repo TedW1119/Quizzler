@@ -56,4 +56,14 @@ object DataModels {
         val password: String,
         val educationLevel: String
     )
+
+    // Store the form data for an Account
+    class AccountFormData(
+        var name: String = "",
+        var username: String = "",
+        var email: String = "",
+        var password: String = "",
+        var confirmPassword: String = "",
+        var educationLevel: String = ""
+    )
 }

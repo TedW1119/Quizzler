@@ -19,7 +19,7 @@ import composables.errorDialog
 import composables.primaryButton
 import composables.secondaryButton
 import controllers.AccountController
-import utils.NUM_PFP
+import utils.Constants.NUM_PFP
 import kotlin.random.Random
 
 @Composable
