@@ -14,15 +14,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.semantics.Role.Companion.Image
-import com.mongodb.client.model.Filters
-import com.mongodb.kotlin.client.coroutine.MongoClient
 import composables.*
 import controllers.AccountController
-import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.runBlocking
-import org.bson.types.ObjectId
 import utils.DataModels.Account
+import utils.DataModels.AccountFormData
 import utils.getProfilePic
 
 @Composable
@@ -36,10 +31,12 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String, profilePicI
     var error by remember { mutableStateOf("") }
 
     // Display account data, and store changes
-    val accountData = AccountSettingsFormData(
+    val accountData = AccountFormData(
         account.name,
         account.username,
         account.email,
+        "",
+        "",
         account.educationLevel
     )
 
@@ -50,6 +47,17 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String, profilePicI
 
     // Handle saving account changes
     fun handleSaveChanges() {
+
+        // Check for valid password change
+        var newPassword = account.password
+        val changedPassword = (accountData.password != "" || accountData.confirmPassword != "")
+        if (changedPassword && (accountData.password != account.password)) {
+            error = "The old password you entered is incorrect."
+            showErrorDialog = true
+            return
+        } else if (changedPassword) {
+            newPassword = accountData.confirmPassword
+        }
 
         // Check for unique username and email
         val existingUsername = accountController.getAccountFromLogin(accountData.username)
@@ -77,7 +85,7 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String, profilePicI
             accountData.name,
             accountData.username,
             accountData.email,
-            account.password,
+            newPassword,
             accountData.educationLevel
         )
         accountController.upsertAccount(payload)
@@ -91,6 +99,8 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String, profilePicI
             "Name" -> accountData.name = value
             "Username" -> accountData.username = value
             "Email" -> accountData.email = value
+            "Old Password" -> accountData.password = value
+            "New Password" -> accountData.confirmPassword = value
             "Education Level" -> accountData.educationLevel = value
         }
     }
@@ -100,7 +110,7 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String, profilePicI
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
 
             // Avatar
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+            Row(modifier = Modifier.fillMaxWidth().padding(20.dp), horizontalArrangement = Arrangement.Center) {
                 Image(
                     painter = painterResource(getProfilePic(profilePicId)),
                     contentDescription = null,
@@ -108,24 +118,35 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String, profilePicI
                     modifier = Modifier.height(150.dp).width(150.dp).clip(CircleShape)
                 )
             }
+            Spacer(modifier = Modifier.height(14.dp))
 
             // Account fields
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(modifier = Modifier.fillMaxWidth()) {
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                     formField("Name", true, ::updateField, accountData.name)
                 }
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                     formField("Username", true, ::updateField, accountData.username)
                 }
-            }
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
                     formField("Email", true, ::updateField, accountData.email)
                 }
+            }
+            Spacer(modifier = Modifier.height(24.dp))
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
-                    dropdown("Education Level", educationLevelOptions, ::updateField, accountData.educationLevel)
+                    formField("Old Password", true, ::updateField, accountData.password)
+                }
+                Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+                    formField("New Password", true, ::updateField, accountData.confirmPassword)
                 }
             }
+            Spacer(modifier = Modifier.height(10.dp))
+            Text("Note: only fill out the password fields if you wish to change your password.")
+            Spacer(modifier = Modifier.height(24.dp))
 
             // Cancel and save buttons
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {

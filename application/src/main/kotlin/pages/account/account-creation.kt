@@ -11,8 +11,9 @@ import androidx.compose.ui.unit.dp
 import composables.*
 import controllers.AccountController
 import org.bson.types.ObjectId
+import utils.Constants.NUM_PFP
 import utils.DataModels.Account
-import utils.NUM_PFP
+import utils.DataModels.AccountFormData
 import kotlin.random.Random
 
 @Composable
@@ -26,7 +27,7 @@ fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
     var error by remember { mutableStateOf("") }
 
     // Store form data and fields
-    val formData = AccountFormData
+    val formData = AccountFormData()
     val fields = listOf(
         "Name",
         "Username",
