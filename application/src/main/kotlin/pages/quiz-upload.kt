@@ -88,10 +88,9 @@ fun quizUpload(changePage: (String, MutableMap<Any, Any>) -> Unit) {
     }
 
     fun handleNext() {
-        val fileType = getFileType(selectedFile!!)
-
         // Send file to backend
         val note = if (selectedFile != null) {
+            val fileType = getFileType(selectedFile!!)
             generateNote(selectedFile!!, fileType)
         } else {
             // TODO make alert for need a file selected to proceed

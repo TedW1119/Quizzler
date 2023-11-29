@@ -33,6 +33,8 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:$logback_version")
     testImplementation("io.ktor:ktor-server-tests-jvm")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+    testImplementation("io.ktor:ktor-server-test-host:$ktor_version")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
     implementation("org.mongodb:mongodb-driver-kotlin-coroutine:4.11.0")
     implementation(platform("com.aallam.openai:openai-client-bom:3.5.0"))
     implementation("com.aallam.openai:openai-client")
