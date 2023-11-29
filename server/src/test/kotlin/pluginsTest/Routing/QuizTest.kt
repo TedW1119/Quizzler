@@ -271,7 +271,7 @@ class QuizTest {
             noteId = "1143"
         )
         val mockQuizController = Mockito.mock(QuizController::class.java)
-        doThrow(RuntimeException("Test Invalid request body format"))
+        doThrow(RuntimeException("Test Internal server error"))
             .`when`(mockQuizController)
             .createQuiz(quizBody)
 
