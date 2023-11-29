@@ -49,8 +49,7 @@ class AccountTest {
             username = "muser",
             email = "muser@outlook.com",
             password = "pwd",
-            educationLevel = "University",
-            profilePicId = "1"
+            educationLevel = "University"
         )
         val mockAccountController = mock(AccountController::class.java)
         `when`(mockAccountController.getAccount("123456")).thenReturn(account)
@@ -133,8 +132,7 @@ class AccountTest {
             username = "muser",
             email = "muser@outlook.com",
             password = "pwd",
-            educationLevel = "University",
-            profilePicId = "1"
+            educationLevel = "University"
         )
         val mockAccountController = mock(AccountController::class.java)
         `when`(mockAccountController.getAccountFromLogin("123456")).thenReturn(account)
@@ -298,8 +296,7 @@ class AccountTest {
             username = "muser",
             email = "muser@outlook.com",
             password = "pwd",
-            educationLevel = "University",
-            profilePicId = "1"
+            educationLevel = "University"
         )
         val mockAccountController = mock(AccountController::class.java)
         doNothing().`when`(mockAccountController).upsertAccount(accountBody)
@@ -331,8 +328,7 @@ class AccountTest {
             username = "muser",
             email = "muser@outlook.com",
             password = "pwd",
-            educationLevel = "University",
-            profilePicId = "1"
+            educationLevel = "University"
         )
         val mockAccountController = mock(AccountController::class.java)
         doNothing().`when`(mockAccountController).upsertAccount(accountBody)
@@ -364,8 +360,7 @@ class AccountTest {
             username = "muser",
             email = "muser@outlook.com",
             password = "pwd",
-            educationLevel = "University",
-            profilePicId = "1"
+            educationLevel = "University"
         )
         val mockAccountController = mock(AccountController::class.java)
         doThrow(RuntimeException("Test Invalid request body format"))
