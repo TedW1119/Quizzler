@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import composables.buttonWithIndicator
+import composables.errorDialog
 import composables.primaryButton
 import composables.secondaryButton
 import controllers.QuizController
@@ -40,6 +41,10 @@ object QuizFormData {
 fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String) {
     val quizForm = QuizFormData
     val quizController = QuizController()
+
+    // Track error state
+    var showErrorDialog by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf("") }
 
     // track state of settings
     var selectedQuestionCount by remember { mutableStateOf(5) }
@@ -71,6 +76,13 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
 
     // Callback for going back to landing page (after quiz created)
     fun handleNext() {
+        // Check for valid name and subject
+        if (quizForm.quizName == "" || quizForm.quizSubject == "") {
+            error = "You must enter a name and subject."
+            showErrorDialog = true
+            return
+        }
+
         // note that the state remains the same, so the previous settings will still be the same as before when creating another quiz. TODO design decision on whether to keep this or not
         // only name and subject being reset right now
         handleCreateQuiz()
@@ -374,6 +386,14 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
                         }
                     }
                 }
+            }
+        }
+
+        // Render dialogs
+        if (showErrorDialog) {
+            errorDialog("Error Creating Quiz", error) {
+                showErrorDialog = false
+                error = ""
             }
         }
     }
