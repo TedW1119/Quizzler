@@ -14,3 +14,16 @@ fun getProfilePic(profilePicId: Int): String {
         else -> "pfp_tmp.svg"
     }
 }
+
+// Validate an email
+fun validateEmail(email: String): Boolean {
+    val pattern = Regex("\\S+@\\S+\\.\\S+\$")
+    return pattern.matches(email)
+}
+
+// Validate a password
+// Note: a password must have at least 8 characters, including a number, uppercase, and lowercase character
+fun validatePassword(password: String): Boolean {
+    val pattern = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).{8,}\$")
+    return pattern.matches(password)
+}

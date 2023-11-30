@@ -3,6 +3,7 @@ package pages.account
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,6 +15,8 @@ import org.bson.types.ObjectId
 import utils.Constants.NUM_PFP
 import utils.DataModels.Account
 import utils.DataModels.AccountFormData
+import utils.validateEmail
+import utils.validatePassword
 import kotlin.random.Random
 
 @Composable
@@ -28,13 +31,7 @@ fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
 
     // Store form data and fields
     val formData = AccountFormData()
-    val fields = listOf(
-        "Name",
-        "Username",
-        "Email",
-        "Password",
-        "Confirm Password"
-    )
+    val fields = listOf("Name", "Username", "Email", "Password", "Confirm Password")
 
     // Handle going back to login page
     fun handleGoBack() {
@@ -44,9 +41,28 @@ fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
     // Handle creating a new account
     fun handleCreateAccount() {
 
-        // Check for matching passwords
+        // Check for valid name and username
+        if (formData.name == "" || formData.username == "") {
+            error = "You must enter a name and username."
+            showErrorDialog = true
+            return
+        }
+
+        // Check for matching and valid passwords
         if (formData.password != formData.confirmPassword) {
             error = "The password and confirmed password do not match."
+            showErrorDialog = true
+            return
+        }
+        if (!validatePassword(formData.password)) {
+            error = "The chosen password is not valid."
+            showErrorDialog = true
+            return
+        }
+
+        // Check for valid email
+        if (!validateEmail(formData.email)) {
+            error = "The chosen email is not a valid email."
             showErrorDialog = true
             return
         }
@@ -102,7 +118,15 @@ fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
     ) {
         fields.forEach {
             field -> formField(field, true, ::updateField)
-            Spacer(modifier = Modifier.height(24.dp))
+            if (field == "Confirm Password") {
+                Spacer(modifier = Modifier.height(6.dp))
+                Text("Passwords must have 8 characters, including a")
+                Spacer(modifier = Modifier.height(2.dp))
+                Text("number, uppercase, and lowercase character.")
+                Spacer(modifier = Modifier.height(16.dp))
+            } else {
+                Spacer(modifier = Modifier.height(24.dp))
+            }
         }
 
         Row(

@@ -21,6 +21,8 @@ import controllers.AccountController
 import utils.DataModels.Account
 import utils.DataModels.AccountFormData
 import utils.getProfilePic
+import utils.validateEmail
+import utils.validatePassword
 
 @Composable
 @Preview
@@ -49,6 +51,13 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String, profilePicI
     // Handle saving account changes
     fun handleSaveChanges() {
 
+        // Check for valid name and username
+        if (accountData.name == "" || accountData.username == "") {
+            error = "Your name and username cannot be empty."
+            showErrorDialog = true
+            return
+        }
+
         // Check for valid password change
         var newPassword = account.password
         val changedPassword = (accountData.password != "" || accountData.confirmPassword != "")
@@ -56,8 +65,19 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String, profilePicI
             error = "The old password you entered is incorrect."
             showErrorDialog = true
             return
+        } else if (changedPassword && !validatePassword(accountData.confirmPassword)) {
+            error = "Your new password is not valid."
+            showErrorDialog = true
+            return
         } else if (changedPassword) {
             newPassword = accountData.confirmPassword
+        }
+
+        // Check for valid email
+        if (!validateEmail(accountData.email)) {
+            error = "The chosen email is not a valid email."
+            showErrorDialog = true
+            return
         }
 
         // Check for unique username and email
@@ -144,6 +164,8 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String, profilePicI
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
+            Text("Passwords must have 8 characters, including a number, uppercase, and lowercase character.")
+            Spacer(modifier = Modifier.height(2.dp))
             Text("Note: only fill out the password fields if you wish to change your password.")
             Spacer(modifier = Modifier.height(24.dp))
 
