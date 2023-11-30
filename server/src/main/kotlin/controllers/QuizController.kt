@@ -69,13 +69,28 @@ class QuizController {
                 val completionRequest = CompletionRequest(
                     model = ModelId("text-davinci-003"),
                     prompt = "Given the sample text: \n" + text + "\n \n" +
-                            "Now, create ${quiz.totalQuestions} true and false question(s). Store them in a JSON of the following type: data class Question( val _id: String, val question: String, val type: String, val options: List<String>, val hint: String,  marks: Int, val answer: String ) Only worry about the question, options, and answer fields, and keep the question and options as concise as possible (less than $difficultyLength words each). Follow this example for ${quiz.totalQuestions} multiple choice questions, but an example of one true and false question stored in the JSON (remember to append the JSON correctly for more than one question) is:" + """ [ { "_id": "1", "question": "An operating system is responsible for running applications.", "type": "T/F", "options": ["True", "False"], "hint": "", "marks": 0, "answer": "False" } ] $difficultyPrompt""",
+                            "Now, create ${quiz.totalQuestions} true and false question(s). Store them in a JSON of the following type: data class Question( val _id: String, val question: String, val type: String, val options: List<String>, val hint: String,  marks: Int, val answer: String ) Only worry about the question, options, and answer fields, and keep the question and options as concise as possible (less than $difficultyLength words each). Follow this example for ${quiz.totalQuestions} true and false questions, but an example of one true and false question stored in the JSON (remember to append the JSON correctly for more than one question) is:" + """ [ { "_id": "1", "question": "An operating system is responsible for running applications.", "type": "T/F", "options": ["True", "False"], "hint": "", "marks": 0, "answer": "False" } ] $difficultyPrompt""",
                     maxTokens = 300,
                     temperature = 0.02
                 )
                 // Complete and Decode from String
                 val completion: TextCompletion = openAI.completion(completionRequest)
                 result = completion.choices[0].text.trim()
+
+            } else if (quiz.questionType == "Mix") {
+
+                // Complete Request Using OpenAPI
+                val completionRequest = CompletionRequest(
+                    model = ModelId("text-davinci-003"),
+                    prompt = "Given the sample text: \n" + text + "\n \n" +
+                            "Now, create a total ${quiz.totalQuestions} multiple choice and true/false question(s). Store them in a JSON of the following type: data class Question( val _id: String, val question: String, val type: String, val options: List<String>, val hint: String,  marks: Int, val answer: String ) Only worry about the question, options, and answer fields, and keep the question and options as concise as possible (less than $difficultyLength words each). Follow this example for ${quiz.totalQuestions} multiple choice and true/false questions, but an example of one multiple choice question and one true/false question stored in the JSON together (remember to append the JSON correctly for more than one question) is:" + """ [ { "_id": "1", "question": "An operating system is responsible for running applications.", "type": "T/F", "options": ["True", "False"], "hint": "", "marks": 0, "answer": "False" }, { "_id": "2", "question": "An operating system is responsible for running applications.", "type": "T/F", "options": ["True", "False"], "hint": "", "marks": 0, "answer": "False" } ] Remember, that was an example of the structure, I need a JSON of length ${quiz.totalQuestions} and I need a mix of both types of questions. $difficultyPrompt""",
+                    maxTokens = 500,
+                    temperature = 0.02
+                )
+                // Complete and Decode from String
+                val completion: TextCompletion = openAI.completion(completionRequest)
+                result = completion.choices[0].text.trim()
+
             }
 
             // Error Handling Check
