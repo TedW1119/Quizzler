@@ -1,9 +1,7 @@
 package pages.account
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -14,7 +12,12 @@ import androidx.compose.ui.Modifier
 // ----------------------------------------------------------------------------
 @Composable
 @Preview
-fun formField(field: String, defaultLabel: Boolean, updateField: (String, String) -> Unit, defaultValue: String = "") {
+fun formField(
+    field: String,
+    defaultLabel: Boolean,
+    updateField: (String, String) -> Unit,
+    defaultValue: String = ""
+) {
     var fieldValue by remember { mutableStateOf(defaultValue) }
 
     // Handle the field being updated
