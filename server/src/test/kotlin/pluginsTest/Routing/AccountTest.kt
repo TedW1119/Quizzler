@@ -48,8 +48,7 @@ class AccountTest {
             name = "Mocked User",
             username = "muser",
             email = "muser@outlook.com",
-            password = "pwd",
-            educationLevel = "University"
+            password = "pwd"
         )
         val mockAccountController = mock(AccountController::class.java)
         `when`(mockAccountController.getAccount("123456")).thenReturn(account)
@@ -131,8 +130,7 @@ class AccountTest {
             name = "Mocked User",
             username = "muser",
             email = "muser@outlook.com",
-            password = "pwd",
-            educationLevel = "University"
+            password = "pwd"
         )
         val mockAccountController = mock(AccountController::class.java)
         `when`(mockAccountController.getAccountFromLogin("123456")).thenReturn(account)
@@ -295,8 +293,7 @@ class AccountTest {
             name = "Mocked User",
             username = "muser",
             email = "muser@outlook.com",
-            password = "pwd",
-            educationLevel = "University"
+            password = "pwd"
         )
         val mockAccountController = mock(AccountController::class.java)
         doNothing().`when`(mockAccountController).upsertAccount(accountBody)
@@ -327,8 +324,7 @@ class AccountTest {
             name = "Mocked User",
             username = "muser",
             email = "muser@outlook.com",
-            password = "pwd",
-            educationLevel = "University"
+            password = "pwd"
         )
         val mockAccountController = mock(AccountController::class.java)
         doNothing().`when`(mockAccountController).upsertAccount(accountBody)
@@ -359,8 +355,7 @@ class AccountTest {
             name = "Mocked User",
             username = "muser",
             email = "muser@outlook.com",
-            password = "pwd",
-            educationLevel = "University"
+            password = "pwd"
         )
         val mockAccountController = mock(AccountController::class.java)
         doThrow(RuntimeException("Test Invalid request body format"))

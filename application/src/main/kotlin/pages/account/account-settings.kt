@@ -38,8 +38,7 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String, profilePicI
         account.username,
         account.email,
         "",
-        "",
-        account.educationLevel
+        ""
     )
 
     // Handle return to Landing page
@@ -87,8 +86,7 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String, profilePicI
             accountData.name,
             accountData.username,
             accountData.email,
-            newPassword,
-            accountData.educationLevel
+            newPassword
         )
         accountController.upsertAccount(payload)
         // TODO: show confirmation modal, show success message
@@ -103,7 +101,6 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String, profilePicI
             "Email" -> accountData.email = value
             "Old Password" -> accountData.password = value
             "New Password" -> accountData.confirmPassword = value
-            "Education Level" -> accountData.educationLevel = value
         }
     }
 

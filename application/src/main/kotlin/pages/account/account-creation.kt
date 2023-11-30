@@ -75,8 +75,7 @@ fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
             formData.name,
             formData.username,
             formData.email,
-            formData.password,
-            "testSchool"
+            formData.password
         )
         accountController.upsertAccount(account)
         data["accountId"] = accountId
@@ -92,7 +91,6 @@ fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
             "Email" -> formData.email = value
             "Password" -> formData.password = value
             "Confirm Password" -> formData.confirmPassword = value
-            "Education Level" -> formData.educationLevel = value
         }
     }
 

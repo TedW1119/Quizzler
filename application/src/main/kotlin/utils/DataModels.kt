@@ -53,8 +53,7 @@ object DataModels {
         val name: String,
         val username: String,
         val email: String,
-        val password: String,
-        val educationLevel: String
+        val password: String
     )
 
     // Store the form data for an Account
@@ -63,7 +62,6 @@ object DataModels {
         var username: String = "",
         var email: String = "",
         var password: String = "",
-        var confirmPassword: String = "",
-        var educationLevel: String = ""
+        var confirmPassword: String = ""
     )
 }
