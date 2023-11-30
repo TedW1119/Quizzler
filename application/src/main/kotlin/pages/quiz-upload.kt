@@ -3,7 +3,6 @@ package pages
 import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -11,7 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import composables.button
+import composables.primaryButton
+import composables.secondaryButton
 import controllers.NoteController
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
@@ -129,14 +129,14 @@ fun quizUpload(changePage: (String, MutableMap<Any, Any>) -> Unit) {
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                button("Cancel", true, ::handleCancel)
+                secondaryButton("Cancel", ::handleCancel)
 
                 Text(
                     "Upload Your Slide Deck Here",
                     fontSize = 32.sp,
                 )
 
-                button("Next", true, ::handleNext)
+                primaryButton("Next", ::handleNext)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -145,13 +145,11 @@ fun quizUpload(changePage: (String, MutableMap<Any, Any>) -> Unit) {
             if (selectedFile != null) {
                 Text("Selected File: ${selectedFile?.name}", fontSize = 20.sp)
             } else {
-                Button(
-                    onClick = {
-                        val fileDialog = utils.FileDialog()   // Create new file Dialog
-                        selectedFile = fileDialog.getFileToOpen()   // Get the file to open
-                    }
+                primaryButton(
+                    "Upload File"
                 ) {
-                    Text("Upload File")
+                    val fileDialog = utils.FileDialog()   // Create new file Dialog
+                    selectedFile = fileDialog.getFileToOpen()   // Get the file to open
                 }
             }
         }

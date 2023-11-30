@@ -1,7 +1,6 @@
 package pages
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -9,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import composables.primaryButton
 
 @Composable
 fun quizResult(changePage: (String) -> Unit, data: MutableMap<Any, Any>) {
@@ -40,8 +40,6 @@ fun quizResult(changePage: (String) -> Unit, data: MutableMap<Any, Any>) {
             fontWeight = FontWeight.Medium
         )
         Spacer(modifier = Modifier.height(32.dp))
-        Button(onClick = ::handleExit) {
-            Text("Return to Quiz List")
-        }
+        primaryButton("Return to Quiz List", ::handleExit)
     }
 }

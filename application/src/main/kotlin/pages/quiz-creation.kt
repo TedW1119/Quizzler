@@ -4,7 +4,6 @@ import androidx.compose.desktop.ui.tooling.preview.Preview
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,7 +11,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import composables.button
+import composables.buttonWithIndicator
+import composables.primaryButton
+import composables.secondaryButton
 import controllers.QuizController
 import org.bson.types.ObjectId
 import pages.account.formField
@@ -29,7 +30,7 @@ object QuizFormData {
     var questionDifficulty:String = "Easy"
     var questionType:String = "MCQ"
     var totalQuestions:Int = 5
-    var totalMarks:Double = 5.0
+    var totalMarks:Double = -1.0
     var hint:Boolean = false
     var time:Int = 600 //seconds ?
 }
@@ -49,7 +50,7 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
         val quiz = Quiz(
             _id = ObjectId().toString(),
             accountId = accountId,
-            questionIds = mutableListOf<String>(), // ?
+            questionIds = mutableListOf(),
             name = quizForm.quizName,
             subject = quizForm.quizSubject,
             difficulty = quizForm.questionDifficulty,
@@ -60,7 +61,7 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
             time = quizForm.time,
             noteId = noteId
         )
-        quizController.upsertQuiz(quiz)
+        quizController.generateQuiz(quiz)
     }
 
     // Callback for going back to upload
@@ -98,14 +99,14 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
                     .padding(16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                button("Cancel", true, ::handleCancel)
+                secondaryButton("Cancel",::handleCancel)
 
                 Text(
                     "Select Your Quizzer Style",
                     fontSize = 32.sp,
                 )
 
-                button("Next", true, ::handleNext)
+                primaryButton("Next", ::handleNext)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -141,7 +142,7 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 Text(
-                                    "# of Questions",
+                                    "Number of Questions",
                                     fontSize = 16.sp,
                                 )
                             }
@@ -155,53 +156,41 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.Center
                                 ) {
-                                    Button(onClick = {
-                                        quizForm.totalQuestions = 5
-                                        quizForm.totalMarks = 5.0
-                                        println("set number of questions to 5")
-                                        selectedQuestionCount = 5
-                                    },
-                                        modifier = Modifier
-                                            .background(if (selectedQuestionCount == 5) Color.Blue else Color.Gray)
-                                    ) {
-                                        Text("5")
-                                    }
+                                    buttonWithIndicator(
+                                        text = "5",
+                                        isSelected = selectedQuestionCount == 5,
+                                        onClick = {
+                                            quizForm.totalQuestions = 5
+                                            selectedQuestionCount = 5
+                                        }
+                                    )
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Button(onClick = {
-                                        quizForm.totalQuestions = 10
-                                        quizForm.totalMarks = 10.0
-                                        println("set number of questions to 10")
-                                        selectedQuestionCount = 10
-                                    },
-                                        modifier = Modifier
-                                            .background(if (selectedQuestionCount == 10) Color.Blue else Color.Gray)
-                                    ) {
-                                        Text("10")
-                                    }
+                                    buttonWithIndicator(
+                                        text = "10",
+                                        isSelected = selectedQuestionCount == 10,
+                                        onClick = {
+                                            quizForm.totalQuestions = 10
+                                            selectedQuestionCount = 10
+                                        }
+                                    )
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Button(onClick = {
-                                        quizForm.totalQuestions = 20
-                                        quizForm.totalMarks = 20.0
-                                        println("set number of questions to 20")
-                                        selectedQuestionCount = 20
-                                    },
-                                        modifier = Modifier
-                                            .background(if (selectedQuestionCount == 20) Color.Blue else Color.Gray)
-                                    ) {
-                                        Text("20")
-                                    }
+                                    buttonWithIndicator(
+                                        text = "20",
+                                        isSelected = selectedQuestionCount == 20,
+                                        onClick = {
+                                            quizForm.totalQuestions = 20
+                                            selectedQuestionCount = 20
+                                        }
+                                    )
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Button(onClick = {
-                                        quizForm.totalQuestions = 2
-                                        quizForm.totalMarks = 2.0
-                                        println("set number of questions to 2")
-                                        selectedQuestionCount = 2
-                                    },
-                                        modifier = Modifier
-                                            .background(if (selectedQuestionCount == 2) Color.Blue else Color.Gray)
-                                    ) {
-                                        Text("2?")
-                                    }
+                                    buttonWithIndicator(
+                                        text = "2?",
+                                        isSelected = selectedQuestionCount == 2,
+                                        onClick = {
+                                            quizForm.totalQuestions = 2
+                                            selectedQuestionCount = 2
+                                        }
+                                    )
                                 }
                             }
                         }
@@ -236,39 +225,32 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.Center
                                 ) {
-                                    Button(
+                                    buttonWithIndicator(
+                                        text = "Easy",
+                                        isSelected = selectedDifficulty == "Easy",
                                         onClick = {
-                                            quizForm.questionDifficulty = "Easy";
-                                            println("set difficult of questions to Easy")
+                                            quizForm.questionDifficulty = "Easy"
                                             selectedDifficulty = "Easy"
-                                        },
-                                        modifier = Modifier
-                                            .background(if (selectedDifficulty == "Easy") Color.Green else Color.Gray)
-                                    ) {
-                                        Text("Easy")
-                                    }
+                                        }
+                                    )
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Button(onClick = {
-                                        quizForm.questionDifficulty = "Medium";
-                                        println("set difficult of questions to Medium")
-                                        selectedDifficulty = "Medium"
-                                    },
-                                        modifier = Modifier
-                                            .background(if (selectedDifficulty == "Medium") Color.Yellow else Color.Gray)
-                                    ) {
-                                        Text("Medium")
-                                    }
+                                    buttonWithIndicator(
+                                        text = "Medium",
+                                        isSelected = selectedDifficulty == "Medium",
+                                        onClick = {
+                                            quizForm.questionDifficulty = "Medium"
+                                            selectedDifficulty = "Medium"
+                                        }
+                                    )
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Button(onClick = {
-                                        quizForm.questionDifficulty = "Hard";
-                                        println("set difficult of questions to Hard")
-                                        selectedDifficulty = "Hard"
-                                    },
-                                        modifier = Modifier
-                                            .background(if (selectedDifficulty == "Hard") Color.Red else Color.Gray)
-                                    ) {
-                                        Text("Hard")
-                                    }
+                                    buttonWithIndicator(
+                                        text = "Hard",
+                                        isSelected = selectedDifficulty == "Hard",
+                                        onClick = {
+                                            quizForm.questionDifficulty = "Hard"
+                                            selectedDifficulty = "Hard"
+                                        }
+                                    )
                                 }
                             }
                         }
@@ -311,49 +293,32 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
                                     modifier = Modifier.fillMaxWidth(),
                                     horizontalArrangement = Arrangement.Center
                                 ) {
-                                    Button(onClick = {
-                                        quizForm.questionType = "MCQ";
-                                        println("set question type to MCQ")
-                                        selectedQuestionType = "MCQ"
-                                    },
-                                        modifier = Modifier
-                                            .background(if (selectedQuestionType == "MCQ") Color.Blue else Color.Gray)
-                                    ) {
-                                        Text("MCQ")
-                                    }
+                                    buttonWithIndicator(
+                                        text = "MCQ",
+                                        isSelected = selectedQuestionType == "MCQ",
+                                        onClick = {
+                                            quizForm.questionType = "MCQ"
+                                            selectedQuestionType = "MCQ"
+                                        }
+                                    )
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Button(onClick = {
-                                        quizForm.questionType = "MSQ";
-                                        println("set question type to MSQ")
-                                        selectedQuestionType = "MSQ"
-                                    },
-                                        modifier = Modifier
-                                            .background(if (selectedQuestionType == "MSQ") Color.Blue else Color.Gray)
-                                    ) {
-                                        Text("MSQ")
-                                    }
+                                    buttonWithIndicator(
+                                        text = "T/F",
+                                        isSelected = selectedQuestionType == "T/F",
+                                        onClick = {
+                                            quizForm.questionType = "T/F"
+                                            selectedQuestionType = "T/F"
+                                        }
+                                    )
                                     Spacer(modifier = Modifier.width(8.dp))
-                                    Button(onClick = {
-                                        quizForm.questionType = "T/F";
-                                        println("set question type to T/F")
-                                        selectedQuestionType = "T/F"
-                                    },
-                                        modifier = Modifier
-                                            .background(if (selectedQuestionType == "T/F") Color.Blue else Color.Gray)
-                                    ) {
-                                        Text("T/F")
-                                    }
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    Button(onClick = {
-                                        quizForm.questionType = "SA";
-                                        println("set question type to SA")
-                                        selectedQuestionType = "SA"
-                                    },
-                                        modifier = Modifier
-                                            .background(if (selectedQuestionType == "SA") Color.Blue else Color.Gray)
-                                    ) {
-                                        Text("SA")
-                                    }
+                                    buttonWithIndicator(
+                                        text = "Mix",
+                                        isSelected = selectedQuestionType == "Mix",
+                                        onClick = {
+                                            quizForm.questionType = "Mix"
+                                            selectedQuestionType = "Mix"
+                                        }
+                                    )
                                 }
                             }
                         }
@@ -382,7 +347,7 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
                             Column(
                                 modifier = Modifier
                                     .fillMaxHeight()
-                                    .offset(0.dp, 32.dp),
+                                    .offset(0.dp, 24.dp),
                                 verticalArrangement = Arrangement.Center,
                             ) {
                                 Column(
@@ -402,10 +367,8 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
                                     }
 
                                     fields.forEach {
-                                        field -> formField(field, false, ::updateField)
-                                        Spacer(modifier = Modifier.height(6.dp))
+                                        field -> formField(field, true, ::updateField)
                                     }
-
                                 }
                             }
                         }

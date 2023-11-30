@@ -1,15 +1,16 @@
 package composables
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
 @Preview
-fun button(text: String, filled: Boolean, action: () -> Unit, mod: androidx.compose.ui.Modifier) {
+fun button(text: String, filled: Boolean, action: () -> Unit, mod: Modifier) {
     MaterialTheme {
         if (filled) {
             Button(onClick = action, modifier = mod) {
@@ -53,5 +54,20 @@ fun secondaryButton(text: String, action: () -> Unit) {
         colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFFEEEEEE))
     ) {
         Text(text, color = Color(0xFF5D3FD3))
+    }
+}
+
+@Composable
+fun buttonWithIndicator(text: String, isSelected: Boolean, onClick: () -> Unit) {
+    Button(
+        onClick = {
+            onClick()
+        },
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = if (isSelected) MaterialTheme.colors.primary else Color.Gray
+        ),
+        modifier = Modifier.height(50.dp)
+    ) {
+        Text(text = text, color = Color.White)
     }
 }

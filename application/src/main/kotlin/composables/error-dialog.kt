@@ -1,8 +1,10 @@
 package composables
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
@@ -17,7 +19,7 @@ fun errorDialog(
     AlertDialog(
         onDismissRequest = { closeDialog() },
         text = {
-            Column() {
+            Column {
                 Text(title, color = Color.Red)
                 Text(text)
             }

@@ -41,7 +41,7 @@ fun menubar(sidebarClick: () -> Unit, settingsClick: () -> Unit, profilePicId: I
         }
 
         // app name text
-        Text("Abnormally Distributed", fontSize = 20.sp,)
+        Text("Abnormally Distributed", fontSize = 20.sp)
 
         // profile button
         Box(
