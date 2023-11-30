@@ -13,37 +13,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import composables.alertDialog
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
-import utils.Constants.BASE_URL
-import utils.DataModels.Question
+import composables.primaryButton
+import composables.secondaryButton
+import controllers.QuestionController
+import controllers.QuizController
 import utils.DataModels.Quiz
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
-
-fun getQuestion(id: String): Question {
-    val client = HttpClient.newBuilder().build()
-    val request = HttpRequest.newBuilder()
-        .uri(URI.create("${BASE_URL}/question/${id}"))
-        .GET()
-        .build()
-    val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-    return Json.decodeFromString<Question>(response.body())
-}
-
-fun updateQuiz(quiz: Quiz): String {
-    val quizSerialized = Json.encodeToString(quiz)
-    val client = HttpClient.newBuilder().build()
-    val request = HttpRequest.newBuilder()
-        .uri(URI.create("${BASE_URL}/quiz"))
-        .header("Content-Type", "application/json")
-        .POST(HttpRequest.BodyPublishers.ofString(quizSerialized))
-        .build()
-    val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-    return response.body()
-}
 
 @Composable
 @Preview
@@ -51,7 +25,8 @@ fun quizTaking(changePage: (String, MutableMap<Any, Any>) -> Unit, data: Mutable
     val quiz = data["quiz"] as Quiz
     var questionIndex by remember { mutableStateOf(0) }
     val answers = remember { mutableStateListOf<String?>(null) }
-    val questions = remember { mutableStateListOf(getQuestion(quiz.questionIds.first()))}
+    val questionController = QuestionController()
+    val questions = remember { mutableStateListOf(questionController.getQuestion(quiz.questionIds.first()))}
 
     // LaunchedEffect ensures that code does not rerun in recomposition
     LaunchedEffect(Unit) {
@@ -74,14 +49,15 @@ fun quizTaking(changePage: (String, MutableMap<Any, Any>) -> Unit, data: Mutable
         // calculate the number of correct answers
         var correctCount = 0
         for (i in 0 until questions.size) {
-            if (questions[i].answer == answers[i]) {
+            if (questions[i]?.answer == answers[i]) {
                 correctCount += 1
             }
         }
 
         val newTotalMarks = calculatePercentage(correctCount, quiz.questionIds.size)
         val updatedQuiz = quiz.copy(totalMarks = newTotalMarks)
-        updateQuiz(updatedQuiz)
+        val quizController = QuizController()
+        quizController.updateQuiz(updatedQuiz)
 
         val newData: MutableMap<Any, Any> = mutableMapOf(
             "quizScore" to Pair(correctCount, quiz.questionIds.size)
@@ -98,7 +74,7 @@ fun quizTaking(changePage: (String, MutableMap<Any, Any>) -> Unit, data: Mutable
             ) {
                 Box(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = questions[questionIndex].question,
+                        text = questions[questionIndex]!!.question,
                         fontSize = 20.sp,
                         modifier = Modifier.padding(bottom = 16.dp),
                         softWrap = true
@@ -133,7 +109,7 @@ fun quizTaking(changePage: (String, MutableMap<Any, Any>) -> Unit, data: Mutable
                 modifier = Modifier.weight(1f, fill = true).fillMaxSize()
             ) {
                 Column(modifier = Modifier.fillMaxWidth()) {
-                    val options = questions[questionIndex].options
+                    val options = questions[questionIndex]!!.options
                     options.forEachIndexed { _, option ->
                         Row(
                             modifier = Modifier.fillMaxWidth().padding(8.dp),
@@ -159,8 +135,8 @@ fun quizTaking(changePage: (String, MutableMap<Any, Any>) -> Unit, data: Mutable
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.End
             ) {
-                Button(onClick = { showExitDialog = true } ) {
-                    Text("Exit Quiz")
+                secondaryButton("Exit Quiz") {
+                    showExitDialog = true
                 }
                 Spacer(modifier = Modifier.width(8.dp))
                 Button(
@@ -181,7 +157,7 @@ fun quizTaking(changePage: (String, MutableMap<Any, Any>) -> Unit, data: Mutable
                     onClick = {
                         questionIndex += 1
                         if (questions.size == questionIndex) {
-                            questions.add(getQuestion(quiz.questionIds[questionIndex]))
+                            questions.add(questionController.getQuestion(quiz.questionIds[questionIndex]))
                         }
                         selectedOption = if (answers[questionIndex] != null) {
                             answers[questionIndex]
@@ -193,12 +169,8 @@ fun quizTaking(changePage: (String, MutableMap<Any, Any>) -> Unit, data: Mutable
                     Text("Next Question")
                 }
                 Spacer(modifier = Modifier.width(8.dp))
-                Button(
-                    onClick = {
-                        showSubmitDialog = true
-                    }
-                ) {
-                    Text("Submit")
+                primaryButton("Submit") {
+                    showSubmitDialog = true
                 }
             }
         }

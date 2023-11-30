@@ -4,7 +4,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.*
+import androidx.compose.material.Card
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,30 +15,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import composables.button
+import composables.primaryButton
+import composables.secondaryButton
 import controllers.QuizController
-import kotlinx.serialization.json.Json
-import utils.Constants.BASE_URL
 import utils.DataModels.Quiz
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
-
-fun getQuizList(accountId: String): List<Quiz> {
-    val client = HttpClient.newBuilder().build()
-    val request = HttpRequest.newBuilder()
-        .uri(URI.create("${BASE_URL}/account/${accountId}/quizzes"))
-        .GET()
-        .build()
-    val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-    return Json.decodeFromString<List<Quiz>>(response.body())
-}
 
 @Composable
 fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: String) {
-    val quizzes = getQuizList(accountId)
     val quizController = QuizController()
+    val quizzes = quizController.getQuizListByAccountId(accountId)
 
     fun handleQuizTaking(quiz: Quiz) {
         val newData: MutableMap<Any, Any> = mutableMapOf(
@@ -59,9 +47,7 @@ fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: Stri
             TopAppBar(
                 title = { Text(text = "My Quizzes") },
                 actions = {
-                    Button(onClick = ::handleExitQuizList) {
-                        Text("Exit")
-                    }
+                    secondaryButton("Exit", ::handleExitQuizList)
                 }
             )
         }
@@ -111,7 +97,7 @@ fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: Stri
                                     modifier = Modifier.padding(2.dp)
                                 )
                                 Text(
-                                    "Total Marks: ${quizzes[index].totalMarks}%",
+                                    "Total Marks: ${if (quizzes[index].totalMarks == -1.0) "—" else "${quizzes[index].totalMarks}%"}",
                                     fontSize = 15.sp,
                                     color = Color(0xFFFFFFFF),
                                     textAlign = TextAlign.Center,
@@ -121,7 +107,7 @@ fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: Stri
                                 fun deleteQuiz() {
                                     quizController.deleteQuiz(quizzes[index]._id)
                                 }
-                                button("Delete Quiz", true, ::deleteQuiz)
+                                primaryButton("Delete Quiz", ::deleteQuiz)
                             }
                         }
                     }
@@ -132,9 +118,7 @@ fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: Stri
                         ) {
                             Text("You have not created any quizzes. Click below to create a quiz.")
                             Spacer(modifier = Modifier.height(10.dp))
-                            Button(onClick = ::handleUploadQuiz) {
-                                Text("Create a Quiz")
-                            }
+                            primaryButton("Create a Quiz", ::handleUploadQuiz)
                         }
                     }
                 }

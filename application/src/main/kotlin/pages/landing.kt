@@ -16,15 +16,13 @@ import composables.menubar
 import composables.settingsOverlay
 import composables.sidebar
 import controllers.AccountController
-import utils.DataModels.Account
-import kotlin.random.Random
 
 @Composable
 @Preview
 fun landing(changePage: (String) -> Unit, accountId: String, profilePicId: Int) {
 
     // Query account data
-    val accountController: AccountController = AccountController()
+    val accountController = AccountController()
     val account = accountController.getAccount(accountId) ?: return
     val username = account.name
 
@@ -32,7 +30,7 @@ fun landing(changePage: (String) -> Unit, accountId: String, profilePicId: Int) 
     var isSettingsVisible by remember { mutableStateOf(false) }
     val interactionSource = remember { MutableInteractionSource() }
 
-    fun handleUploadQuiz() {
+    fun handleCreateQuiz() {
         changePage("QuizUpload")
     }
     fun handleViewQuizzes() {
@@ -108,20 +106,14 @@ fun landing(changePage: (String) -> Unit, accountId: String, profilePicId: Int) 
                 fontWeight = FontWeight.Bold
             )
 
-            // create quiz and view quiz button
-            val input = "test input"
-            //fun handleSubmit() {
-            //    println(input)
-            //}
             Row(
                 modifier = Modifier
                     .fillMaxSize(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                button("Create a Quiz", true, ::handleUploadQuiz, Modifier.padding(100.dp))
+                button("Create a Quiz", true, ::handleCreateQuiz, Modifier.padding(100.dp))
                 button("View my Quizzes", true, ::handleViewQuizzes, Modifier.padding(100.dp))
-
             }
         }
     }

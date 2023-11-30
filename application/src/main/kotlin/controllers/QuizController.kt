@@ -3,7 +3,7 @@ package controllers
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import utils.Constants
-import utils.DataModels
+import utils.DataModels.Quiz
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -11,7 +11,7 @@ import java.net.http.HttpResponse
 
 class QuizController {
     // Query a quiz
-    fun getQuiz(quizId: String): DataModels.Quiz? {
+    fun getQuiz(quizId: String): Quiz? {
         val client = HttpClient.newBuilder().build()
 
         try {
@@ -22,7 +22,7 @@ class QuizController {
             val response = client.send(request, HttpResponse.BodyHandlers.ofString())
 
             return if (response.statusCode() in 200..299) {
-                Json.decodeFromString<DataModels.Quiz>(response.body())
+                Json.decodeFromString<Quiz>(response.body())
             } else {
                 println("HTTP request failed with status code ${response.statusCode()}")
                 null
@@ -33,9 +33,31 @@ class QuizController {
         }
     }
 
+    fun getQuizListByAccountId(accountId: String): List<Quiz> {
+        val client = HttpClient.newBuilder().build()
+
+        try {
+            val request = HttpRequest.newBuilder()
+                .uri(URI.create("${Constants.BASE_URL}/account/${accountId}/quizzes"))
+                .GET()
+                .build()
+            val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+
+            return if (response.statusCode() in 200..299) {
+                Json.decodeFromString<List<Quiz>>(response.body())
+            } else {
+                println("HTTP request failed with status code ${response.statusCode()}")
+                emptyList()
+            }
+        } catch (e:Exception) {
+            println(e)
+            return emptyList()
+        }
+    }
+
 
     // Create/update a quiz
-    fun upsertQuiz(quiz: DataModels.Quiz) {
+    fun generateQuiz(quiz: Quiz) {
         val client = HttpClient.newBuilder().build()
 
         try {
@@ -53,6 +75,31 @@ class QuizController {
         } catch (e: Exception) {
             // log error
             println(e)
+        }
+    }
+
+    fun updateQuiz(quiz: Quiz): String? {
+        val quizSerialized = Json.encodeToString(quiz)
+        val client = HttpClient.newBuilder().build()
+
+        try {
+            val request = HttpRequest.newBuilder()
+                .uri(URI.create("${Constants.BASE_URL}/quiz"))
+                .header("Content-Type","application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(quizSerialized))
+                .build()
+            val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+            return if (response.statusCode() in 200..299) {
+                println("Successfully created quiz")
+                response.body()
+            } else {
+                println("HTTP request failed with status code: ${response.statusCode()}")
+                null
+            }
+        } catch (e: Exception) {
+            // log error
+            println(e)
+            return null
         }
     }
 
