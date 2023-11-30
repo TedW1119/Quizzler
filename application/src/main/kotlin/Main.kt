@@ -8,6 +8,7 @@ import androidx.compose.ui.window.application
 import pages.*
 import pages.account.accountCreation
 import pages.account.accountSettings
+import java.awt.Dimension
 
 fun main() = application {
 
@@ -39,5 +40,6 @@ fun main() = application {
             "QuizUpload" -> quizUpload(::changePage)
             "AccountSettings" -> accountSettings(::changePage, data["accountId"] as String, data["profilePicId"] as Int)
         }
+        window.minimumSize = Dimension(800, 600)
     }
 }
