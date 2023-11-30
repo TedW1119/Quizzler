@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import composables.errorDialog
 import composables.primaryButton
 import composables.secondaryButton
 import controllers.NoteController
@@ -87,6 +88,10 @@ fun quizUpload(changePage: (String, MutableMap<Any, Any>) -> Unit) {
     var selectedFile by remember { mutableStateOf<File?>(null) }
     val noteController = NoteController()
 
+    // Track error state
+    var showErrorDialog by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf("") }
+
     // Callback for handling cancelling
     fun handleCancel() {
         changePage("Landing", mutableMapOf())
@@ -98,7 +103,8 @@ fun quizUpload(changePage: (String, MutableMap<Any, Any>) -> Unit) {
             val fileType = getFileType(selectedFile!!)
             generateNote(selectedFile!!, fileType)
         } else {
-            // TODO make alert for need a file selected to proceed
+            error = "You must upload a file."
+            showErrorDialog = true
             return
         }
 
@@ -173,6 +179,14 @@ fun quizUpload(changePage: (String, MutableMap<Any, Any>) -> Unit) {
                 }
             }
             Text("Selected File: ${if (selectedFile != null) selectedFile?.name else "None"}", fontSize = 20.sp)
+        }
+    }
+
+    // Render dialogs
+    if (showErrorDialog) {
+        errorDialog("Error Uploading a File", error) {
+            showErrorDialog = false
+            error = ""
         }
     }
 }
