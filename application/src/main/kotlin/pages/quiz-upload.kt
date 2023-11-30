@@ -1,13 +1,17 @@
 package pages
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import composables.primaryButton
@@ -17,6 +21,7 @@ import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.text.PDFTextStripper
 import org.bson.types.ObjectId
 import utils.DataModels.Note
+import utils.FileDialog
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileReader
@@ -104,7 +109,6 @@ fun quizUpload(changePage: (String, MutableMap<Any, Any>) -> Unit) {
             val newData: MutableMap<Any, Any> = mutableMapOf(
                 "noteTextId" to note._id,
             )
-//            println("CREATED NEW NOTE WITH ID ${note._id} and text ${note.text}")
             changePage("QuizCreation", newData)
         } catch (e: Exception) {
             println("Error inserting note")
@@ -112,47 +116,63 @@ fun quizUpload(changePage: (String, MutableMap<Any, Any>) -> Unit) {
         }
     }
 
-    // Overall Box
-    Box(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Column(
-            modifier = Modifier.background(Color.White).padding(16.dp),
-
-            ) {
-            // Title Section
+    Scaffold(
+        topBar = {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.LightGray)
                     .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 secondaryButton("Cancel", ::handleCancel)
-
                 Text(
-                    "Upload Your Slide Deck Here",
-                    fontSize = 32.sp,
+                    "File Upload",
+                    fontSize = 24.sp,
                 )
-
                 primaryButton("Next", ::handleNext)
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // File Drop Area
-            if (selectedFile != null) {
-                Text("Selected File: ${selectedFile?.name}", fontSize = 20.sp)
-            } else {
-                primaryButton(
-                    "Upload File"
-                ) {
-                    val fileDialog = utils.FileDialog()   // Create new file Dialog
+        }
+    ) {
+        Column (
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+        ) {
+            // File Upload Area
+            OutlinedButton(
+                onClick = {
+                    val fileDialog = FileDialog()   // Create new file Dialog
                     selectedFile = fileDialog.getFileToOpen()   // Get the file to open
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(240.dp)
+                    .padding(vertical = 16.dp),
+                border = BorderStroke(2.dp, Color.Gray),
+                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colors.primary)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.KeyboardArrowUp,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(48.dp)
+                            .padding(8.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "Upload File Here",
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
+            Text("Selected File: ${if (selectedFile != null) selectedFile?.name else "None"}", fontSize = 20.sp)
         }
     }
 }
-
