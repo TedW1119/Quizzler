@@ -38,7 +38,8 @@ private fun getFileType(file: File): String {
     // Return Statements
     return when (extension) {
         "txt" -> "txt"
-        else -> "pdf"   // front end handles all other cases (must be pdf)
+        "pdf" -> "pdf"
+        else -> extension // other cases for error handling
     }
 }
 
@@ -101,6 +102,11 @@ fun quizUpload(changePage: (String, MutableMap<Any, Any>) -> Unit) {
         // Send file to backend
         val note = if (selectedFile != null) {
             val fileType = getFileType(selectedFile!!)
+            if (!(fileType == "txt" || fileType == "pdf")) {
+                error = "You may only upload a .pdf or .txt file."
+                showErrorDialog = true
+                return
+            }
             generateNote(selectedFile!!, fileType)
         } else {
             error = "You must upload a file."
