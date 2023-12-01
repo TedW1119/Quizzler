@@ -9,7 +9,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import composables.*
+import composables.errorDialog
+import composables.primaryButton
+import composables.secondaryButton
 import controllers.AccountController
 import org.bson.types.ObjectId
 import utils.Constants.NUM_PFP
@@ -120,7 +122,7 @@ fun accountCreation(changePage: (String, MutableMap<Any, Any>) -> Unit) {
             field -> formField(field, true, ::updateField)
             if (field == "Confirm Password") {
                 Spacer(modifier = Modifier.height(6.dp))
-                Text("Passwords must have 8 characters, including a")
+                Text("Passwords must have at least 8 characters, including a")
                 Spacer(modifier = Modifier.height(2.dp))
                 Text("number, uppercase, and lowercase character.")
                 Spacer(modifier = Modifier.height(16.dp))

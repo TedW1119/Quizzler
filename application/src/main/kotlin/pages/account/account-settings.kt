@@ -164,7 +164,7 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String, profilePicI
                 }
             }
             Spacer(modifier = Modifier.height(10.dp))
-            Text("Passwords must have 8 characters, including a number, uppercase, and lowercase character.")
+            Text("Passwords must have at least 8 characters, including a number, uppercase, and lowercase character.")
             Spacer(modifier = Modifier.height(2.dp))
             Text("Note: only fill out the password fields if you wish to change your password.")
             Spacer(modifier = Modifier.height(24.dp))
