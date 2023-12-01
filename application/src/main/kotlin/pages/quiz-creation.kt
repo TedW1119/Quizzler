@@ -351,7 +351,7 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 Text(
-                                    "Extra Settings",
+                                    "Customizable Options",
                                     fontSize = 16.sp,
                                 )
                             }
