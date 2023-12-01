@@ -4,19 +4,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import utils.getProfilePic
 
 
 @Composable
-fun menubar(sidebarClick: () -> Unit, settingsClick: () -> Unit, profilePicId: Int) {
+fun menubar(randomizePic: () -> Unit, settingsClick: () -> Unit, profilePicId: Int) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -25,23 +23,20 @@ fun menubar(sidebarClick: () -> Unit, settingsClick: () -> Unit, profilePicId: I
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        // hamburger button
+        // dice button
         Box(
             modifier = Modifier
                 .size(56.dp)
                 .padding(8.dp)
-                .clickable { sidebarClick() }
+                .clickable { randomizePic() }
         ) {
             Image(
-                painter = painterResource("hamburger.png"),
-                contentDescription = "hamburger sidebar",
+                painter = painterResource("dice.png"),
+                contentDescription = "dice icon",
                 modifier = Modifier.fillMaxWidth()
             )
 
         }
-
-        // app name text
-        Text("Abnormally Distributed", fontSize = 20.sp)
 
         // profile button
         Box(

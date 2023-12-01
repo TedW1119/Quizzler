@@ -8,19 +8,22 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import composables.button
 import composables.menubar
 import composables.settingsOverlay
-import composables.sidebar
 import controllers.AccountController
+import utils.Constants.NUM_PFP
+import kotlin.random.Random
 
 @Composable
 @Preview
-fun landing(changePage: (String) -> Unit, accountId: String, profilePicId: Int) {
+fun landing(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: String, profilePicId: Int) {
 
+    val data: MutableMap<Any, Any> = mutableMapOf()
     // Query account data
     val accountController = AccountController()
     val account = accountController.getAccount(accountId) ?: return
@@ -28,19 +31,27 @@ fun landing(changePage: (String) -> Unit, accountId: String, profilePicId: Int) 
 
     var isSidebarVisible by remember { mutableStateOf(false) }
     var isSettingsVisible by remember { mutableStateOf(false) }
+    var currentProfilePic by remember { mutableStateOf(profilePicId) }
     val interactionSource = remember { MutableInteractionSource() }
 
     fun handleCreateQuiz() {
-        changePage("QuizUpload")
+        data["profilePicId"] = currentProfilePic
+        changePage("QuizUpload", data)
     }
     fun handleViewQuizzes() {
-        changePage("QuizList")
+        data["profilePicId"] = currentProfilePic
+        changePage("QuizList", data)
     }
     fun handleLogout() {
-        changePage("Login")
+        changePage("Login", data)
     }
     fun handleOpenAccountSettings() {
-        changePage("AccountSettings")
+        data["profilePicId"] = currentProfilePic
+        changePage("AccountSettings", data)
+    }
+
+    fun shuffleProfilePic() {
+        currentProfilePic = Random.nextInt(0, NUM_PFP)
     }
 
     Box(
@@ -56,26 +67,10 @@ fun landing(changePage: (String) -> Unit, accountId: String, profilePicId: Int) 
     )
     {
         menubar(
-            sidebarClick = { isSidebarVisible = !isSidebarVisible },
+            randomizePic = { shuffleProfilePic() },
             settingsClick = { isSettingsVisible = !isSettingsVisible },
-            profilePicId
+            profilePicId = currentProfilePic
         )
-
-        // TODO Ideas for what to do with the sidebar and/or hamburger !
-        //  #1 have a button that re-picks your profile photo
-        //  #2 have a button that changes to light/dark mode. will require different themes
-        //  #3
-        // sidebar
-        Box(
-            modifier = Modifier
-                .align(Alignment.TopStart)
-                .fillMaxHeight()
-                .width(250.dp)
-        ) {
-            if (isSidebarVisible) {
-                sidebar()
-            }
-        }
 
         // profile settings
         Box(
@@ -101,9 +96,28 @@ fun landing(changePage: (String) -> Unit, accountId: String, profilePicId: Int) 
             Text(
                 modifier = Modifier
                     .offset(0.dp, 56.dp),
+                text = "Quizzler",
+                style = TextStyle(
+                    fontSize = 56.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            )
+
+            Text(
+                modifier = Modifier
+                    .offset(0.dp, 112.dp),
                 text = "Welcome Back $username",
                 fontSize = 30.sp,
                 fontWeight = FontWeight.Bold
+            )
+
+            Text(
+                modifier = Modifier
+                    .offset(0.dp, 400.dp),
+                text = "An Abnormally Distributed product.",
+                style = TextStyle(
+                    fontSize = 10.sp
+                )
             )
 
             Row(
