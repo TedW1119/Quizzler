@@ -40,6 +40,6 @@ fun main() = application {
             "QuizUpload" -> quizUpload(::changePage)
             "AccountSettings" -> accountSettings(::changePage, data["accountId"] as String, data["profilePicId"] as Int)
         }
-        window.minimumSize = Dimension(1280, 720)
+        window.minimumSize = Dimension(800, 600)
     }
 }

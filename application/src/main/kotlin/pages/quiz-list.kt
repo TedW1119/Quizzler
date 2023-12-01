@@ -8,7 +8,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,7 +23,7 @@ import utils.DataModels.Quiz
 @Composable
 fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: String) {
     val quizController = QuizController()
-    val quizzes = quizController.getQuizListByAccountId(accountId)
+    var quizzes by remember { mutableStateOf(quizController.getQuizListByAccountId(accountId)) }
 
     fun handleQuizTaking(quiz: Quiz) {
         val newData: MutableMap<Any, Any> = mutableMapOf(
@@ -40,6 +40,11 @@ fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: Stri
     fun handleUploadQuiz() {
         val newData: MutableMap<Any, Any> = mutableMapOf()
         changePage("QuizUpload", newData)
+    }
+
+    fun handleDeleteQuiz(index: Int) {
+        quizController.deleteQuiz(quizzes[index]._id)
+        quizzes = quizzes.filter { it != quizzes[index] }
     }
 
     Scaffold(
@@ -59,70 +64,65 @@ fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: Stri
                 top = 50.dp,
                 end = 50.dp,
                 bottom = 50.dp
-            ),
-            content = {
-                if (quizzes.isNotEmpty()) {
-                    items(quizzes.size) { index ->
-                        Card(
-                            backgroundColor = Color.LightGray,
-                            modifier = Modifier
-                                .padding(10.dp)
-                                .fillMaxWidth()
-                                .clickable( onClick = { handleQuizTaking(quizzes[index]) } ),
-                            elevation = 16.dp,
+            )
+        ) {
+            if (quizzes.isNotEmpty()) {
+                items(quizzes.size) { index ->
+                    Card(
+                        backgroundColor = Color.LightGray,
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .fillMaxWidth()
+                            .clickable(onClick = { handleQuizTaking(quizzes[index]) }),
+                        elevation = 16.dp,
+                    ) {
+                        Column( // Use a Column to stack Texts vertically
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.padding(5.dp)
                         ) {
-                            Column( // Use a Column to stack Texts vertically
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                modifier = Modifier.padding(5.dp)
-                            ) {
-                                Text(
-                                    quizzes[index].name,
-                                    fontSize = 25.sp,
-                                    color = Color(0xFFFFFFFF),
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier.padding(8.dp)
-                                )
-                                Text(
-                                    "Subject: ${quizzes[index].subject}",
-                                    fontSize = 15.sp,
-                                    color = Color(0xFFFFFFFF),
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier.padding(2.dp)
-                                )
-                                Text(
-                                    "Difficulty: ${quizzes[index].difficulty}",
-                                    fontSize = 15.sp,
-                                    color = Color(0xFFFFFFFF),
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier.padding(2.dp)
-                                )
-                                Text(
-                                    "Total Marks: ${if (quizzes[index].totalMarks == -1.0) "—" else "${quizzes[index].totalMarks}%"}",
-                                    fontSize = 15.sp,
-                                    color = Color(0xFFFFFFFF),
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier.padding(2.dp)
-                                )
-
-                                fun deleteQuiz() {
-                                    quizController.deleteQuiz(quizzes[index]._id)
-                                }
-                                primaryButton("Delete Quiz", ::deleteQuiz)
-                            }
-                        }
-                    }
-                } else {
-                    items(1) {
-                        Column (
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Text("You have not created any quizzes. Click below to create a quiz.")
-                            Spacer(modifier = Modifier.height(10.dp))
-                            primaryButton("Create a Quiz", ::handleUploadQuiz)
+                            Text(
+                                quizzes[index].name,
+                                fontSize = 25.sp,
+                                color = Color(0xFFFFFFFF),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(8.dp)
+                            )
+                            Text(
+                                "Subject: ${quizzes[index].subject}",
+                                fontSize = 15.sp,
+                                color = Color(0xFFFFFFFF),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(2.dp)
+                            )
+                            Text(
+                                "Difficulty: ${quizzes[index].difficulty}",
+                                fontSize = 15.sp,
+                                color = Color(0xFFFFFFFF),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(2.dp)
+                            )
+                            Text(
+                                "Total Marks: ${if (quizzes[index].totalMarks == -1.0) "—" else "${quizzes[index].totalMarks}%"}",
+                                fontSize = 15.sp,
+                                color = Color(0xFFFFFFFF),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(2.dp)
+                            )
+                            primaryButton("Delete Quiz") { handleDeleteQuiz(index) }
                         }
                     }
                 }
+            } else {
+                items(1) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text("You have not created any quizzes. Click below to create a quiz.")
+                        Spacer(modifier = Modifier.height(10.dp))
+                        primaryButton("Create a Quiz", ::handleUploadQuiz)
+                    }
+                }
             }
-        )
+        }
     }
 }
