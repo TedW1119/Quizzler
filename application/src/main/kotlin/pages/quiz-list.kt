@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import composables.alertDialog
 import composables.primaryButton
 import composables.secondaryButton
 import controllers.QuizController
@@ -24,6 +25,8 @@ import utils.DataModels.Quiz
 fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: String) {
     val quizController = QuizController()
     var quizzes by remember { mutableStateOf(quizController.getQuizListByAccountId(accountId)) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var deleteQuizIndex by remember { mutableStateOf(-1) }
 
     fun handleQuizTaking(quiz: Quiz) {
         val newData: MutableMap<Any, Any> = mutableMapOf(
@@ -42,9 +45,13 @@ fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: Stri
         changePage("QuizUpload", newData)
     }
 
-    fun handleDeleteQuiz(index: Int) {
-        quizController.deleteQuiz(quizzes[index]._id)
-        quizzes = quizzes.filter { it != quizzes[index] }
+    fun handleDeleteQuiz() {
+        if (deleteQuizIndex == -1) { // deleteQuizIndex has not been set
+            return
+        }
+        quizController.deleteQuiz(quizzes[deleteQuizIndex]._id)
+        quizzes = quizzes.filter { it != quizzes[deleteQuizIndex] }
+        showDeleteDialog = false
     }
 
     Scaffold(
@@ -108,7 +115,10 @@ fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: Stri
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier.padding(2.dp)
                             )
-                            primaryButton("Delete Quiz") { handleDeleteQuiz(index) }
+                            primaryButton("Delete Quiz") {
+                                showDeleteDialog = true
+                                deleteQuizIndex = index
+                            }
                         }
                     }
                 }
@@ -124,5 +134,16 @@ fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: Stri
                 }
             }
         }
+    }
+    if (showDeleteDialog) {
+        alertDialog(
+            setShowDialog = { showDeleteDialog = false },
+            title = "Quiz Deletion",
+            content = "Are you sure you want to delete this quiz?",
+            primaryButtonText = "Delete",
+            handlePrimaryButton = ::handleDeleteQuiz,
+            secondaryButtonText = "Cancel",
+            handleSecondaryButton = { showDeleteDialog = false }
+        )
     }
 }
