@@ -39,7 +39,7 @@ class QuizController {
             else -> "20"
         }
 
-        val openAI = OpenAI("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")
+        val openAI = OpenAI("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")
 
         // Attempt to Generate Question:
         try {
