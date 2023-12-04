@@ -14,7 +14,7 @@ import java.net.http.HttpResponse
 class AccountController {
 
     // Query an account
-    fun getAccount(accountId: String): Account? {
+    fun getAccount(accountId: String): Account {
         val client = HttpClient.newBuilder().build()
         val request = HttpRequest.newBuilder()
             .uri(URI.create("${Constants.BASE_URL}/account/${accountId}"))
@@ -35,14 +35,31 @@ class AccountController {
         return try {
             Json.decodeFromString<Account>(response.body())
         } catch (e: Exception) {
+            println(e)
             null
         }
     }
 
-    // Query quizzes associated with an account
-    // TODO: implement this
-    fun getAccountQuizzes(id: String): List<Quiz>? {
-        return null
+    fun getAccountQuizzes(id: String): List<Quiz> {
+        val client = HttpClient.newBuilder().build()
+
+        try {
+            val request = HttpRequest.newBuilder()
+                .uri(URI.create("${Constants.BASE_URL}/account/${id}/quizzes"))
+                .GET()
+                .build()
+            val response = client.send(request, HttpResponse.BodyHandlers.ofString())
+
+            return if (response.statusCode() in 200..299) {
+                Json.decodeFromString<List<Quiz>>(response.body())
+            } else {
+                println("HTTP request failed with status code ${response.statusCode()}")
+                emptyList()
+            }
+        } catch (e:Exception) {
+            println(e)
+            return emptyList()
+        }
     }
 
     // Create/update an account
@@ -54,12 +71,6 @@ class AccountController {
             .header("Content-Type", "application/json")
             .POST(HttpRequest.BodyPublishers.ofString(payload))
             .build()
-        val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-    }
-
-    // Delete an account
-    // TODO: implement this
-    fun deleteAccount(id: String): Boolean {
-        return true
+        client.send(request, HttpResponse.BodyHandlers.ofString())
     }
 }

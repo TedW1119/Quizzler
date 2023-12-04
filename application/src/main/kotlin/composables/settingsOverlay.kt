@@ -21,7 +21,7 @@ fun settingsOverlay(
             .padding(15.dp)
     ) {
         // settings content including menu items
-        button("Profile", false, handleOpenAccountSettings)
-        button("Logout", false, handleLogout)
+        secondaryButton("Profile", handleOpenAccountSettings)
+        secondaryButton("Logout", handleLogout)
     }
 }

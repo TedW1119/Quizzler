@@ -12,14 +12,13 @@ import util.Constants.MONGO_URI
 import util.Constants.QUESTION_COLLECTION
 import util.DataModels.Question
 
-class QuestionService() {
+class QuestionService {
     private fun connect(): Pair<MongoClient, MongoCollection<Question>> {
         val mongoClient = MongoClient.create(MONGO_URI)
         val database = mongoClient.getDatabase(MONGO_DB)
 
         return Pair(mongoClient, database.getCollection<Question>(QUESTION_COLLECTION))
     }
-
 
     fun createQuestion(question: Question) {
         val (client, collection) = connect()
@@ -62,6 +61,7 @@ class QuestionService() {
                 response.deletedCount > 0
             }
         } catch (e: Exception) {
+            println(e)
             false
         } finally {
             client.close()

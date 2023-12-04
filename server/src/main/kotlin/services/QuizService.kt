@@ -13,7 +13,7 @@ import util.Constants.MONGO_URI
 import util.Constants.QUIZ_COLLECTION
 import util.DataModels.Quiz
 
-class QuizService() {
+class QuizService {
     // Connect to db and returns the client and collection as a pair
     private fun connect(): Pair<MongoClient, MongoCollection<Quiz>> {
         val mongoClient = MongoClient.create(MONGO_URI)
@@ -83,7 +83,7 @@ class QuizService() {
                 deleteRes.deletedCount > 0
             }
         } catch (e: Exception) {
-            // log
+            println(e)
             false
         } finally {
                 client.close()

@@ -18,13 +18,15 @@ import androidx.compose.ui.unit.sp
 import composables.alertDialog
 import composables.primaryButton
 import composables.secondaryButton
+import controllers.AccountController
 import controllers.QuizController
 import utils.DataModels.Quiz
 
 @Composable
 fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: String) {
+    val accountController = AccountController()
     val quizController = QuizController()
-    var quizzes by remember { mutableStateOf(quizController.getQuizListByAccountId(accountId)) }
+    var quizzes by remember { mutableStateOf(accountController.getAccountQuizzes(accountId)) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var deleteQuizIndex by remember { mutableStateOf(-1) }
 
