@@ -121,4 +121,76 @@ class NoteTest {
             assertEquals(HttpStatusCode.InternalServerError, response.status)
         }
     }
+
+    /**
+     * DELETE NOTE
+     */
+    // successful delete
+    @Test
+    fun testValidDeleteNote() {
+        val mockNoteController = Mockito.mock(NoteController::class.java)
+        Mockito.`when`(mockNoteController.deleteNote("123456")).thenReturn(true)
+
+        testApplication {
+            application {
+                install(ContentNegotiation) {
+                    json()
+                }
+                noteRouting(mockNoteController)
+            }
+
+            val response = client.delete("/note/123456") {
+                headers {
+                    append("Accept", "application/json")
+                }
+            }
+            assertEquals(HttpStatusCode.NoContent, response.status)
+        }
+    }
+
+    // account not found
+    @Test
+    fun testMissingDeleteNote() {
+        val mockNoteController = Mockito.mock(NoteController::class.java)
+        Mockito.`when`(mockNoteController.deleteNote("123456")).thenReturn(false)
+
+        testApplication {
+            application {
+                install(ContentNegotiation) {
+                    json()
+                }
+                noteRouting(mockNoteController)
+            }
+
+            val response = client.delete("/note/123456") {
+                headers {
+                    append("Accept", "application/json")
+                }
+            }
+            assertEquals(HttpStatusCode.NotFound, response.status)
+        }
+    }
+
+    // internal server error
+    @Test
+    fun testInvalidDeleteNote() {
+        val mockNoteController = Mockito.mock(NoteController::class.java)
+        Mockito.`when`(mockNoteController.deleteNote("123456")).thenThrow(java.lang.RuntimeException("Test internal server error"))
+
+        testApplication {
+            application {
+                install(ContentNegotiation) {
+                    json()
+                }
+                noteRouting(mockNoteController)
+            }
+
+            val response = client.delete("/note/123456") {
+                headers {
+                    append("Accept", "application/json")
+                }
+            }
+            assertEquals(HttpStatusCode.InternalServerError, response.status)
+        }
+    }
 }

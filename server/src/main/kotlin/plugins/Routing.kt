@@ -229,6 +229,26 @@ fun Application.questionRouting(questionController: QuestionController) {
                 call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
             }
         }
+
+        delete("/question/{id}") {
+            val id = call.parameters["id"]
+
+            if (id != null) {
+                try {
+                    val isDeleted = questionController.deleteQuestion(id)
+
+                    if (isDeleted) {
+                        call.respond(HttpStatusCode.NoContent)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, "Question not found")
+                    }
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
+                }
+            } else {
+                call.respond(HttpStatusCode.BadRequest, "Invalid request")
+            }
+        }
     }
 }
 
@@ -249,6 +269,27 @@ fun Application.noteRouting(noteController: NoteController) {
             } catch (e: Exception) {
                 // Handle other exceptions that might occur during the processing of the request
                 call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
+            }
+        }
+
+        // delete note
+        delete("/note/{id}") {
+            val id = call.parameters["id"]
+
+            if (id != null) {
+                try {
+                    val isDeleted = noteController.deleteNote(id)
+
+                    if (isDeleted) {
+                        call.respond(HttpStatusCode.NoContent)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound, "Note not found")
+                    }
+                } catch (e: Exception) {
+                    call.respond(HttpStatusCode.InternalServerError, "Internal Server Error")
+                }
+            } else {
+                call.respond(HttpStatusCode.BadRequest, "Invalid request")
             }
         }
     }

@@ -220,4 +220,76 @@ class QuestionTest {
             assertEquals(HttpStatusCode.InternalServerError, response.status)
         }
     }
+
+    /**
+     * DELETE QUESTION
+     */
+    // successful delete
+    @Test
+    fun testValidDeleteQuestion() {
+        val mockQuestionController = Mockito.mock(QuestionController::class.java)
+        Mockito.`when`(mockQuestionController.deleteQuestion("123456")).thenReturn(true)
+
+        testApplication {
+            application {
+                install(ContentNegotiation) {
+                    json()
+                }
+                questionRouting(mockQuestionController)
+            }
+
+            val response = client.delete("/question/123456") {
+                headers {
+                    append("Accept", "application/json")
+                }
+            }
+            assertEquals(HttpStatusCode.NoContent, response.status)
+        }
+    }
+
+    // question not found
+    @Test
+    fun testMissingDeleteQuestion() {
+        val mockQuestionController = Mockito.mock(QuestionController::class.java)
+        Mockito.`when`(mockQuestionController.deleteQuestion("123456")).thenReturn(false)
+
+        testApplication {
+            application {
+                install(ContentNegotiation) {
+                    json()
+                }
+                questionRouting(mockQuestionController)
+            }
+
+            val response = client.delete("/question/123456") {
+                headers {
+                    append("Accept", "application/json")
+                }
+            }
+            assertEquals(HttpStatusCode.NotFound, response.status)
+        }
+    }
+
+    // internal server error
+    @Test
+    fun testInvalidDeleteQuestion() {
+        val mockQuestionController = Mockito.mock(QuestionController::class.java)
+        Mockito.`when`(mockQuestionController.deleteQuestion("123456")).thenThrow(java.lang.RuntimeException("Test internal server error"))
+
+        testApplication {
+            application {
+                install(ContentNegotiation) {
+                    json()
+                }
+                questionRouting(mockQuestionController)
+            }
+
+            val response = client.delete("/question/123456") {
+                headers {
+                    append("Accept", "application/json")
+                }
+            }
+            assertEquals(HttpStatusCode.InternalServerError, response.status)
+        }
+    }
 }

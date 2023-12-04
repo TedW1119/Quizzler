@@ -13,4 +13,8 @@ class QuestionController {
     fun getQuestion(id: String): Question? {
         return questionService.getQuestion(id)
     }
+
+    fun deleteQuestion(id:String): Boolean {
+        return questionService.deleteQuestion(id)
+    }
 }
