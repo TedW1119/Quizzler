@@ -111,7 +111,7 @@ fun quizList(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: Stri
                                 modifier = Modifier.padding(2.dp)
                             )
                             Text(
-                                "Total Marks: ${if (quizzes[index].totalMarks == -1.0) "—" else "${quizzes[index].totalMarks}%"}",
+                                "Latest Grade: ${if (quizzes[index].totalMarks == -1.0) "—" else "${quizzes[index].totalMarks}%"}",
                                 fontSize = 15.sp,
                                 color = Color(0xFFFFFFFF),
                                 textAlign = TextAlign.Center,
