@@ -13,4 +13,8 @@ class NoteController {
     fun createNote(note: Note) {
         noteService.createNote(note)
     }
+
+    fun deleteNote(id: String): Boolean {
+        return noteService.deleteNote(id)
+    }
 }

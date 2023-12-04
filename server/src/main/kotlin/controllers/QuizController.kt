@@ -135,6 +135,14 @@ class QuizController {
 
 
     fun deleteQuiz(id: String): Boolean {
+        val quiz: Quiz = getQuiz(id) ?: return false // return false if quiz not found
+
+        // deleting associated questions and note entry, then the quiz itself
+        for (question in quiz.questionIds) {
+            questionController.deleteQuestion(question)
+        }
+        val isNoteDel = noteController.deleteNote(quiz.noteId)
+
         return quizService.deleteQuiz(id)
     }
 }

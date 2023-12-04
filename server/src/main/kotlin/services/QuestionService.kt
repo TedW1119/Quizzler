@@ -52,4 +52,19 @@ class QuestionService() {
             client.close()
         }
     }
+
+    fun deleteQuestion(id: String): Boolean {
+        val (client, collection) = connect()
+
+        return try {
+            runBlocking {
+                val response = collection.deleteOne(Filters.eq("_id", ObjectId(id)))
+                response.deletedCount > 0
+            }
+        } catch (e: Exception) {
+            false
+        } finally {
+            client.close()
+        }
+    }
 }
