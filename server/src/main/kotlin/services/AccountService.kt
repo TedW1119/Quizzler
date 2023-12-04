@@ -7,31 +7,30 @@ import com.mongodb.kotlin.client.coroutine.MongoCollection
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.bson.types.ObjectId
+import util.Constants.ACCOUNT_COLLECTION
 import util.Constants.MONGO_DB
 import util.Constants.MONGO_URI
-import util.Constants.ACCOUNT_COLLECTION
 import util.DataModels.Account
-import java.lang.Exception
 
 // Service for the Accounts collection
-class AccountService() {
+class AccountService {
 
     // Connect to the db, and return the mongo client and collection
-    private fun connect(coll: String): Pair<MongoClient, MongoCollection<Account>> {
+    private fun connect(): Pair<MongoClient, MongoCollection<Account>> {
         val mongoClient = MongoClient.create(MONGO_URI)
         val database = mongoClient.getDatabase(MONGO_DB)
-        return Pair(mongoClient, database.getCollection<Account>(coll))
+        return Pair(mongoClient, database.getCollection<Account>(ACCOUNT_COLLECTION))
     }
 
     // Query an account document
     fun getAccount(id: String): Account? {
-        val (client, collection) = connect(ACCOUNT_COLLECTION)
+        val (client, collection) = connect()
         return try {
             runBlocking {
                 collection.find(Filters.eq("_id", ObjectId(id))).first()
             }
         } catch (e: Exception) {
-            // TODO: log the error
+            println(e)
             null
         } finally {
             client.close()
@@ -40,7 +39,7 @@ class AccountService() {
 
     // Query an account document using login information
     fun getAccountFromLogin(identifier: String): Account? {
-        val (client, collection) = connect(ACCOUNT_COLLECTION)
+        val (client, collection) = connect()
         return try {
             runBlocking {
                 collection.find(Filters.or(
@@ -50,7 +49,7 @@ class AccountService() {
                 ).first()
             }
         } catch (e: Exception) {
-            // TODO: log the error
+            println(e)
             null
         } finally {
             client.close()
@@ -59,7 +58,7 @@ class AccountService() {
 
     // Create/update an account document
     fun upsertAccount(account: Account) {
-        val (client, collection) = connect(ACCOUNT_COLLECTION)
+        val (client, collection) = connect()
         try {
             runBlocking {
                 collection.replaceOne(
@@ -69,7 +68,7 @@ class AccountService() {
                 )
             }
         } catch (e: Exception) {
-            // TODO: log the error
+            println(e)
         } finally {
             client.close()
         }
@@ -77,14 +76,14 @@ class AccountService() {
 
     // Delete an account document
     fun deleteAccount(id: String): Boolean {
-        val (client, collection) = connect(ACCOUNT_COLLECTION)
+        val (client, collection) = connect()
         return try {
             runBlocking {
                 val response = collection.deleteOne(Filters.eq("_id", ObjectId(id)))
                 response.deletedCount > 0
             }
         } catch (e: Exception) {
-            // TODO: log the error
+            println(e)
             false
         } finally {
             client.close()

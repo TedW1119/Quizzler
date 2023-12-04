@@ -26,7 +26,7 @@ fun landing(changePage: (String, MutableMap<Any, Any>) -> Unit, accountId: Strin
     val data: MutableMap<Any, Any> = mutableMapOf()
     // Query account data
     val accountController = AccountController()
-    val account = accountController.getAccount(accountId) ?: return
+    val account = accountController.getAccount(accountId)
     val username = account.name
 
     var isSidebarVisible by remember { mutableStateOf(false) }

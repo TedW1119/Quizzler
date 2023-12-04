@@ -7,8 +7,8 @@ import com.mongodb.kotlin.client.coroutine.MongoCollection
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.bson.types.ObjectId
-import util.Constants.MONGO_URI
 import util.Constants.MONGO_DB
+import util.Constants.MONGO_URI
 import util.Constants.NOTE_COLLECTION
 import util.DataModels.Note
 
@@ -65,6 +65,7 @@ class NoteService {
                 response.deletedCount > 0
             }
         } catch (e: Exception) {
+            println(e)
             false
         } finally {
             client.close()

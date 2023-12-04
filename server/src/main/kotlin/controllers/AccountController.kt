@@ -26,7 +26,6 @@ class AccountController {
 
     // Create/update an account
     fun upsertAccount(account: Account) {
-        print(account)
         accountService.upsertAccount(account)
     }
 

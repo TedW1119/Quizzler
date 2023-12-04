@@ -10,52 +10,6 @@ import java.net.http.HttpRequest
 import java.net.http.HttpResponse
 
 class QuizController {
-    // Query a quiz
-    fun getQuiz(quizId: String): Quiz? {
-        val client = HttpClient.newBuilder().build()
-
-        try {
-            val request = HttpRequest.newBuilder()
-                .uri(URI.create("${Constants.BASE_URL}/quiz/${quizId}"))
-                .GET()
-                .build()
-            val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-
-            return if (response.statusCode() in 200..299) {
-                Json.decodeFromString<Quiz>(response.body())
-            } else {
-                println("HTTP request failed with status code ${response.statusCode()}")
-                null
-            }
-        } catch (e:Exception) {
-            println(e)
-            return null
-        }
-    }
-
-    fun getQuizListByAccountId(accountId: String): List<Quiz> {
-        val client = HttpClient.newBuilder().build()
-
-        try {
-            val request = HttpRequest.newBuilder()
-                .uri(URI.create("${Constants.BASE_URL}/account/${accountId}/quizzes"))
-                .GET()
-                .build()
-            val response = client.send(request, HttpResponse.BodyHandlers.ofString())
-
-            return if (response.statusCode() in 200..299) {
-                Json.decodeFromString<List<Quiz>>(response.body())
-            } else {
-                println("HTTP request failed with status code ${response.statusCode()}")
-                emptyList()
-            }
-        } catch (e:Exception) {
-            println(e)
-            return emptyList()
-        }
-    }
-
-
     // Create/update a quiz
     fun generateQuiz(quiz: Quiz) {
         val client = HttpClient.newBuilder().build()

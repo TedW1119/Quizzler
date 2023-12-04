@@ -33,7 +33,4 @@ class NoteController {
             println(e)
         }
     }
-
-    // Delete a Note
-    /// TODO implement this, important when wanting to delete a quiz
 }

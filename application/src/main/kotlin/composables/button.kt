@@ -24,22 +24,6 @@ fun button(text: String, filled: Boolean, action: () -> Unit, mod: Modifier) {
     }
 }
 
-// TODO: remove all instances of this button
-@Composable
-fun button(text: String, filled: Boolean, action: () -> Unit) {
-    MaterialTheme {
-        if (filled) {
-            Button(onClick = action) {
-                Text(text)
-            }
-        } else {
-            OutlinedButton(onClick = action) {
-                Text(text)
-            }
-        }
-    }
-}
-
 @Composable
 fun primaryButton(text: String, action: () -> Unit) {
     Button(onClick = action) {

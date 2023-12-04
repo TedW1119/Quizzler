@@ -33,10 +33,8 @@ import java.io.IOException
  */
 private fun getFileType(file: File): String {
     val fileName = file.name
-    val extension = fileName.substringAfterLast('.', "")
-
     // Return Statements
-    return when (extension) {
+    return when (val extension = fileName.substringAfterLast('.', "")) {
         "txt" -> "txt"
         "pdf" -> "pdf"
         else -> extension // other cases for error handling

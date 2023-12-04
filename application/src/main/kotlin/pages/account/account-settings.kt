@@ -28,7 +28,7 @@ import utils.validatePassword
 @Preview
 fun accountSettings(changePage: (String) -> Unit, accountId: String, profilePicId: Int) {
     val accountController = AccountController()
-    val account = accountController.getAccount(accountId) ?: return
+    val account = accountController.getAccount(accountId)
 
     // Track error state
     var showErrorDialog by remember { mutableStateOf(false) }
@@ -109,7 +109,6 @@ fun accountSettings(changePage: (String) -> Unit, accountId: String, profilePicI
             newPassword
         )
         accountController.upsertAccount(payload)
-        // TODO: show confirmation modal, show success message
         changePage("Landing")
     }
 

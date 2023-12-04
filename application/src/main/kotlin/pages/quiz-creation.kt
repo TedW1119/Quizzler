@@ -83,7 +83,7 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
             return
         }
 
-        // note that the state remains the same, so the previous settings will still be the same as before when creating another quiz. TODO design decision on whether to keep this or not
+        // note that the state remains the same, so the previous settings will still be the same as before when creating another quiz.
         // only name and subject being reset right now
         handleCreateQuiz()
         quizForm.quizName = ""

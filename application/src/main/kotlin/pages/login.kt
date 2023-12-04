@@ -14,7 +14,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import composables.button
 import composables.errorDialog
 import composables.primaryButton
 import composables.secondaryButton
@@ -55,13 +54,6 @@ fun login(changePage: (String, MutableMap<Any, Any>) -> Unit) {
     // Handle creating a new account
     fun handleCreateAccount() {
         changePage("AccountCreation", data)
-    }
-
-    // TODO: remove this function after testing
-    fun handleAutoLoginTEMP() {
-        data["accountId"] = "654276f4bd672473259d1812"
-        data["profilePicId"] = Random.nextInt(0, NUM_PFP)
-        changePage("Landing", data)
     }
 
     // Render UI
@@ -129,10 +121,6 @@ fun login(changePage: (String, MutableMap<Any, Any>) -> Unit) {
                 fontSize = 10.sp
             )
         )
-
-        // TODO: remove this button after testing
-        Spacer(modifier = Modifier.height(16.dp))
-        button("Auto-login (TEMP)", true, ::handleAutoLoginTEMP)
     }
 
     // Render dialogs
