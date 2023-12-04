@@ -169,6 +169,15 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
                                     horizontalArrangement = Arrangement.Center
                                 ) {
                                     buttonWithIndicator(
+                                        text = "2",
+                                        isSelected = selectedQuestionCount == 2,
+                                        onClick = {
+                                            quizForm.totalQuestions = 2
+                                            selectedQuestionCount = 2
+                                        }
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    buttonWithIndicator(
                                         text = "5",
                                         isSelected = selectedQuestionCount == 5,
                                         onClick = {
@@ -192,15 +201,6 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
                                         onClick = {
                                             quizForm.totalQuestions = 20
                                             selectedQuestionCount = 20
-                                        }
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    buttonWithIndicator(
-                                        text = "2?",
-                                        isSelected = selectedQuestionCount == 2,
-                                        onClick = {
-                                            quizForm.totalQuestions = 2
-                                            selectedQuestionCount = 2
                                         }
                                     )
                                 }
