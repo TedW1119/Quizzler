@@ -1,7 +1,9 @@
-package pages.account
+package composables
 
 import androidx.compose.desktop.ui.tooling.preview.Preview
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -41,7 +43,7 @@ fun formField(
                 }
             )
 
-        // Label beside the text input
+            // Label beside the text input
         } else {
             Text(
                 text = field

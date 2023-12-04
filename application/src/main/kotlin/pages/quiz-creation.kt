@@ -11,17 +11,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import composables.buttonWithIndicator
-import composables.errorDialog
-import composables.primaryButton
-import composables.secondaryButton
+import composables.*
 import controllers.QuizController
 import org.bson.types.ObjectId
-import pages.account.formField
 import utils.DataModels.Quiz
-
-//import utils.DataModels.Settings
-//import utils.DataModels.Quiz
 
 // Create object to store form data
 object QuizFormData {

@@ -18,6 +18,7 @@ import composables.secondaryButton
 import controllers.QuestionController
 import controllers.QuizController
 import utils.DataModels.Quiz
+import utils.calculatePercentage
 
 @Composable
 @Preview

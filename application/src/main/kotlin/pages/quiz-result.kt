@@ -9,6 +9,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import composables.primaryButton
+import utils.calculatePercentage
 
 @Composable
 fun quizResult(changePage: (String) -> Unit, data: MutableMap<Any, Any>) {
