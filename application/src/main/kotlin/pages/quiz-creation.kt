@@ -131,6 +131,56 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
                             .padding(6.dp)
                             .weight(1f)
                     ) {
+                        // Quiz Information Box
+                        Box(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .weight(1f)
+                                .background(Color.LightGray, shape = RoundedCornerShape(16.dp))
+                        ) {
+                            // Title of Box
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth(2f)
+                                    .background(Color.Gray, shape = RoundedCornerShape(16.dp))
+                                    .padding(16.dp),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                Text(
+                                    "Quiz Information",
+                                    fontSize = 16.sp,
+                                )
+                            }
+                            // Options
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .offset(0.dp, 24.dp),
+                                verticalArrangement = Arrangement.Center,
+                            ) {
+                                Column(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    verticalArrangement = Arrangement.Center
+                                ) {
+                                    val fields = listOf(
+                                        "Name",
+                                        "Subject"
+                                    )
+
+                                    fun updateField(field: String, value: String) {
+                                        when (field) {
+                                            "Name" -> quizForm.quizName = value
+                                            "Subject" -> quizForm.quizSubject = value
+                                        }
+                                    }
+
+                                    fields.forEach {
+                                            field -> formField(field, true, ::updateField)
+                                    }
+                                }
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(12.dp))
                         // # of Questions Box
                         Box(
                             modifier = Modifier
@@ -194,66 +244,6 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
                                         onClick = {
                                             quizForm.totalQuestions = 20
                                             selectedQuestionCount = 20
-                                        }
-                                    )
-                                }
-                            }
-                        }
-                        Spacer(modifier = Modifier.width(12.dp))
-                        // Difficulty Box
-                        Box(
-                            modifier = Modifier
-                                .fillMaxHeight()
-                                .weight(1f)
-                                .background(Color.LightGray, shape = RoundedCornerShape(16.dp))
-                        ) {
-                            // Title of Box
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth(2f)
-                                    .background(Color.Gray, shape = RoundedCornerShape(16.dp))
-                                    .padding(16.dp),
-                                horizontalArrangement = Arrangement.Center
-                            ) {
-                                Text(
-                                    "Question Difficulty",
-                                    fontSize = 16.sp,
-                                )
-                            }
-                            // Options
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxHeight(),
-                                verticalArrangement = Arrangement.Center,
-                            ) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.Center
-                                ) {
-                                    buttonWithIndicator(
-                                        text = "Easy",
-                                        isSelected = selectedDifficulty == "Easy",
-                                        onClick = {
-                                            quizForm.questionDifficulty = "Easy"
-                                            selectedDifficulty = "Easy"
-                                        }
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    buttonWithIndicator(
-                                        text = "Medium",
-                                        isSelected = selectedDifficulty == "Medium",
-                                        onClick = {
-                                            quizForm.questionDifficulty = "Medium"
-                                            selectedDifficulty = "Medium"
-                                        }
-                                    )
-                                    Spacer(modifier = Modifier.width(8.dp))
-                                    buttonWithIndicator(
-                                        text = "Hard",
-                                        isSelected = selectedDifficulty == "Hard",
-                                        onClick = {
-                                            quizForm.questionDifficulty = "Hard"
-                                            selectedDifficulty = "Hard"
                                         }
                                     )
                                 }
@@ -328,7 +318,8 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
                             }
                         }
                         Spacer(modifier = Modifier.width(12.dp))
-                        // Extra Settings Box
+
+                        // Difficulty Box
                         Box(
                             modifier = Modifier
                                 .fillMaxHeight()
@@ -344,36 +335,46 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
                                 horizontalArrangement = Arrangement.Center
                             ) {
                                 Text(
-                                    "Customizable Options",
+                                    "Question Difficulty",
                                     fontSize = 16.sp,
                                 )
                             }
                             // Options
                             Column(
                                 modifier = Modifier
-                                    .fillMaxHeight()
-                                    .offset(0.dp, 24.dp),
+                                    .fillMaxHeight(),
                                 verticalArrangement = Arrangement.Center,
                             ) {
-                                Column(
+                                Row(
                                     modifier = Modifier.fillMaxWidth(),
-                                    verticalArrangement = Arrangement.Center
+                                    horizontalArrangement = Arrangement.Center
                                 ) {
-                                    val fields = listOf(
-                                        "Name",
-                                        "Subject"
-                                    )
-
-                                    fun updateField(field: String, value: String) {
-                                        when (field) {
-                                            "Name" -> quizForm.quizName = value
-                                            "Subject" -> quizForm.quizSubject = value
+                                    buttonWithIndicator(
+                                        text = "Easy",
+                                        isSelected = selectedDifficulty == "Easy",
+                                        onClick = {
+                                            quizForm.questionDifficulty = "Easy"
+                                            selectedDifficulty = "Easy"
                                         }
-                                    }
-
-                                    fields.forEach {
-                                        field -> formField(field, true, ::updateField)
-                                    }
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    buttonWithIndicator(
+                                        text = "Medium",
+                                        isSelected = selectedDifficulty == "Medium",
+                                        onClick = {
+                                            quizForm.questionDifficulty = "Medium"
+                                            selectedDifficulty = "Medium"
+                                        }
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                    buttonWithIndicator(
+                                        text = "Hard",
+                                        isSelected = selectedDifficulty == "Hard",
+                                        onClick = {
+                                            quizForm.questionDifficulty = "Hard"
+                                            selectedDifficulty = "Hard"
+                                        }
+                                    )
                                 }
                             }
                         }
