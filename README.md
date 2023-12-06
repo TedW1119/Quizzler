@@ -1,6 +1,6 @@
 # Abnormally Distributed
 
-## Welcome
+## Welcome! 👋
 Welcome to Quizzler by _Abnormally Distributed_. This is a desktop application where users can generate quiz questions by simply uploading a file! Learn more by clicking through the links below.
 
 ## Main Sections
@@ -39,5 +39,5 @@ Server Code development, OpenAI Integration
 - [Release v1.3](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/blob/main/releases/v1.3-release-notes.md?ref_type=heads) \
 Clean-up UI, PDF Parsing, Difficulty Setting, Unit Testing
 
-## Source code
+## Source Code
 **Source Code:** [Source Code](https://git.uwaterloo.ca/k57hu/abnormally-distributed)
