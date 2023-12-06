@@ -1,0 +1,84 @@
+Module 1 Notes
+- Much of computer science is problem solving
+- First emphasized correctness, now we are also concerned with efficiency
+o Study efficient methods of storing, accessing, and organizing large collections of data
+o Typical operations include insert, delete, search, sort
+- Course will consider various abstract data types (ADTs) and how to realize them efficiently using appropriate data structures
+o Strong emphasis on mathematical analysis, and algorithms are presented in pseudo-code analyzed with order notation
+- Course topics in a list: 
+Algorithm Design
+- Terminology required to characterize efficiency:
+o Problem, problem instance (input), problem solution (output), size of a problem instance (size(I)) 
+o Algorithm, Solving a problem, Program: 
+o Pseudocode
+- There can exist several algorithms that solve a problem, but the best one is decided by correctness & efficiency
+Efficiency of Algorithms/Programs
+- This course is primarily concerned with the amount of time a program takes to run (running time)
+- May also be interested in amount of additional memory required (auxiliary space)
+- The amount of time and/or memory required will depend on Size(I), which is the size of the given problem instance I
+- One way of getting runtime is testing an implementation of an algorithm. It has downsides such as:
+o Implementations may be costly
+o Timings are affected by many things (eg. hardware, software environment, human factors)
+o Cannot test all inputs
+o Cannot easily compare two algorithms/programs
+- Will require a simplified model without dependence on hardware/software that allows us to effectively compare algorithms:
+o Algorithms presented in high-level pseudo-code
+o Analysis is based on an idealized computer model
+o Count the number of primitive operations rather than time
+o Efficiency of an algorithm (with respect to time) is measured in terms of its growth rate (aka complexity)
+- Random Access Machine (RAM): a set of memory cells each storing one item (word) of data. Implicitly assume that memory cells are big enough to hold the items being stored
+o Any access to a memory location takes constant time
+o Any primitive operation takes constant time: implicitly assume that primitive operations have fairly similar, though different, running time on different systems
+o Running time of a program is proportional to the number of memory accesses plus the number of primitive operations
+- In this course we assume that the following are primitive operations: 
+- Running time simplifications: will simplify analysis by considering the behaviour of algorithms for large input sizes: use order notation
+o Informally: Ignore constants and lower order terms
+Asymptotic Notation
+- O-notation: a function f(n) is said to be in O(g(n)) if you can find constants c and n_0 such that the given |f(n)| <= c|g(n)| for all n >= n_0
+o Basically need to find those constants so the O will always be larger than the function (Asymptotic Upper Bound)
+- 
+- A function can also have an asymptotic lower bound, denoted with the Omega symbol: 
+- Putting together the O and Omega bounds we get : 
+- Example: prove the following from first principles (probably write down the solns in notebook) 
+- Small o and lowercase omega notations: strictly smaller/large asymptotic bounds 
+o Difference from O and big omega is that the choice of c>0 has to hold, where before you could pick a c
+o This is rarely proved from first principles
+- Algebra of Order Notations:
+o Identity rule: 
+o Transitivity: 
+o Maximum rules: 
+- Techniques for order notation: 
+o Examples: Do in notebook
+Growth Rates
+- Definitions for same growth rate, one being less than the other, and one being more than the other: 
+- Common growth rates include: constant, logarithmic, linera, linearithmic, quasi-linear, quadratic, cubic, exponential: 
+- How growth rates affect running time: see how much it changes when the size of the problem insance doubles: 
+- Relationships between order notations: 
+Analysis of Algorithms II
+- Techniques for Run-Time Analysis: use asymptotic notation to simplify run-time analysis
+o Running time of an algorithm depends on the input size n
+- Steps:
+o Identify primitive operations that require Theta(1) time
+o The complexity of a loop is expressed as the sum of the complexities of each iteration of the loop
+o Nested loops: start with the innermost loop and proceed outwards. This gives nested summations
+- Two general strategies to identify run-time
+o Use Big-Theta bounds throughout the analysis and obtain a big theta bound for the complexity of the algorithm
+o Prove a O-bound and a matching big- Theta bound separately. Use upper bounds and lower bounds early and frequently
+* This might be easier since upper/lower bounds are easier to sum
+- Complexity of algorithms: Algorithm can have different running times on two instances of the same size – let T_A(I) denote the running time of an algorithm A on instance I
+o Worst-case complexity of an algorithm: worst I
+o Average-case complexity of an algorithm: average over I
+- 
+- It is important not to try and make comparisons between algorithms using O-notation, since it is an upper bound and does not take into account average case
+o If you want to compare algorithms should always use Big Theta notation
+Example: Analysis of MergeSort
+- 
+- 
+o Tricks to reduce run-time and auxiliary space: use parameters to indicate the range of the array that needs to be sorted, and the array used for copying is passed laong as a parameter
+- 
+- Analysis of MergeSort: recurrence relation: 
+- Recurrence Relations: A chart of common ones: 
+Helpful Formulas
+- Order Notation Summary: 
+- Useful sums (arithmetic, geometric, harmonic, etc) 
+- Math facts: log rules, factorial, probability, moments:  
