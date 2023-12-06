@@ -20,7 +20,7 @@ Welcome to Quizzler by _Abnormally Distributed_. This is a desktop application w
 
 ## Installation Details
 - [**Instructions and Walkthrough Guide**](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Final-Submission/Installation-and-Walkthrough-Guide) (Includes Docker Setup)
-- [**Software Releases**](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/tree/main/releases?ref_type=heads)
+- [**Software Releases**](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/tree/main/releases?ref_type=heads) (for both MacOS and Windows)
     - [Release v1.0 Notes](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/blob/main/releases/v1.0-release-notes.md?ref_type=heads) \
 Application Code Development
     - [Release v1.1 Notes](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/blob/main/releases/v1.1-release-notes.md?ref_type=heads) \
