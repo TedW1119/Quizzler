@@ -1,4 +1,4 @@
-package pluginsTest.Routing
+package pluginsTest.routing
 
 import controllers.QuestionController
 import io.ktor.client.call.*
@@ -45,7 +45,6 @@ class QuestionTest {
             question = "Test question text",
             type = "MCQ",
             options = mutableListOf("opt1", "opt2"),
-            hint = null,
             marks = 1,
             answer = "Test Answer"
         )
@@ -128,7 +127,6 @@ class QuestionTest {
             question = "Test question text",
             type = "MCQ",
             options = mutableListOf("opt1", "opt2"),
-            hint = null,
             marks = 1,
             answer = "Test Answer"
         )
@@ -161,7 +159,6 @@ class QuestionTest {
             question = "Test question text",
             type = "MCQ",
             options = mutableListOf("opt1", "opt2"),
-            hint = null,
             marks = 1,
             answer = "Test Answer"
         )
@@ -194,7 +191,6 @@ class QuestionTest {
             question = "Test question text",
             type = "MCQ",
             options = mutableListOf("opt1", "opt2"),
-            hint = null,
             marks = 1,
             answer = "Test Answer"
         )

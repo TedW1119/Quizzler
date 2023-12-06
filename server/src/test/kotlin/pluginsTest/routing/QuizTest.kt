@@ -1,4 +1,4 @@
-package pluginsTest.Routing
+package pluginsTest.routing
 
 import controllers.QuizController
 import io.ktor.client.call.*
@@ -10,7 +10,6 @@ import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.testing.*
 import io.ktor.util.*
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.mockito.Mockito
@@ -19,8 +18,6 @@ import org.mockito.kotlin.doThrow
 import plugins.configureRouting
 import plugins.quizRouting
 import util.DataModels.Quiz
-import kotlin.RuntimeException
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -54,12 +51,10 @@ class QuizTest {
             questionType = "MCQ",
             totalQuestions = 2,
             totalMarks = 2.0,
-            hint = false,
-            time = 600,
             noteId = "1143"
         )
         val mockQuizController = Mockito.mock(QuizController::class.java)
-        Mockito.`when`(mockQuizController.getQuiz("654321")).thenReturn(quiz)
+        `when`(mockQuizController.getQuiz("654321")).thenReturn(quiz)
 
         testApplication {
             application {
@@ -83,7 +78,7 @@ class QuizTest {
     @Test
     fun testMissingGetQuiz() {
         val mockQuizController = Mockito.mock(QuizController::class.java)
-        Mockito.`when`(mockQuizController.getQuiz("654321")).thenReturn(null)
+        `when`(mockQuizController.getQuiz("654321")).thenReturn(null)
 
         testApplication {
             application {
@@ -106,7 +101,7 @@ class QuizTest {
     @Test
     fun testErrorGetQuiz() {
         val mockQuizController = Mockito.mock(QuizController::class.java)
-        Mockito.`when`(mockQuizController.getQuiz("654321")).thenThrow(RuntimeException("Test internal server error"))
+        `when`(mockQuizController.getQuiz("654321")).thenThrow(RuntimeException("Test internal server error"))
 
         testApplication {
             application {
@@ -125,55 +120,6 @@ class QuizTest {
         }
     }
 
-
-    /**
-     * POST GENERATE QUIZ
-     */
-    // valid quiz generated
-    // Issue with Mokito and mocking async function
-    @Ignore
-    fun testValidGenerateQuiz() {
-        val quizBody = Quiz(
-            _id = "654321",
-            accountId = "987654",
-            questionIds = mutableListOf("2222", "1111", "3333"),
-            name = "Test Quiz",
-            subject = "Test Subject",
-            difficulty = "Easy",
-            questionType = "MCQ",
-            totalQuestions = 2,
-            totalMarks = 2.0,
-            hint = false,
-            time = 600,
-            noteId = "1143"
-        )
-        val mockQuizController = Mockito.mock(QuizController::class.java)
-        runBlocking {
-            Mockito.doNothing().doThrow(RuntimeException("TEST")).`when`(mockQuizController).generateQuiz(quizBody)
-        }
-        testApplication {
-            application {
-                install(ContentNegotiation) {
-                    json()
-                }
-                quizRouting(mockQuizController)
-            }
-
-            val response = client.post("/quiz/generate") {
-                headers {
-                    append("Content-Type","application/json")
-                }
-                body = Json.encodeToString(quizBody)
-            }
-            assertEquals(HttpStatusCode.Created, response.status)
-        }
-    }
-
-    // bad request (invalid body format)
-
-    // internal server error
-
-
     /**
      * POST QUIZ
      */
@@ -190,8 +136,6 @@ class QuizTest {
             questionType = "MCQ",
             totalQuestions = 2,
             totalMarks = 2.0,
-            hint = false,
-            time = 600,
             noteId = "1143"
         )
         val mockQuizController = Mockito.mock(QuizController::class.java)
@@ -228,8 +172,6 @@ class QuizTest {
             questionType = "MCQ",
             totalQuestions = 2,
             totalMarks = 2.0,
-            hint = false,
-            time = 600,
             noteId = "1143"
         )
         val mockQuizController = Mockito.mock(QuizController::class.java)
@@ -266,8 +208,6 @@ class QuizTest {
             questionType = "MCQ",
             totalQuestions = 2,
             totalMarks = 2.0,
-            hint = false,
-            time = 600,
             noteId = "1143"
         )
         val mockQuizController = Mockito.mock(QuizController::class.java)

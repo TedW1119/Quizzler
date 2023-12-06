@@ -1,4 +1,4 @@
-package pluginsTest.Routing
+package pluginsTest.routing
 
 import controllers.AccountController
 import io.ktor.client.call.*
@@ -16,9 +16,8 @@ import org.mockito.Mockito.*
 import org.mockito.kotlin.doThrow
 import plugins.accountRouting
 import plugins.configureRouting
-import util.DataModels.Quiz
 import util.DataModels.Account
-import java.lang.RuntimeException
+import util.DataModels.Quiz
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -217,8 +216,6 @@ class AccountTest {
             questionType = "MCQ",
             totalQuestions = 2,
             totalMarks = 2.0,
-            hint = false,
-            time = 600,
             noteId = "1143"
         )
 
@@ -232,8 +229,6 @@ class AccountTest {
             questionType = "T/F",
             totalQuestions = 5,
             totalMarks = 5.0,
-            hint = false,
-            time = 600,
             noteId = "1222"
         )
 

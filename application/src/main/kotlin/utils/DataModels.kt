@@ -19,8 +19,6 @@ object DataModels {
         val questionType: String,
         val totalQuestions: Int,
         val totalMarks: Double,
-        val hint: Boolean,
-        val time: Int,
         val noteId: String
     )
 
@@ -32,7 +30,6 @@ object DataModels {
         val question: String,
         val type: String,
         val options: List<String>,
-        val hint: String?,
         val marks: Int,
         val answer: String
     )

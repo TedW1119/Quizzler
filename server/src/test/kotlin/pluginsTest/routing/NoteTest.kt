@@ -1,4 +1,4 @@
-package pluginsTest.Routing
+package pluginsTest.routing
 
 import controllers.NoteController
 import io.ktor.client.request.*

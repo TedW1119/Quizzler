@@ -25,8 +25,6 @@ object QuizFormData {
     var questionType:String = "MCQ"
     var totalQuestions:Int = 5
     var totalMarks:Double = -1.0
-    var hint:Boolean = false
-    var time:Int = 600 //seconds ?
 }
 
 @Composable
@@ -55,8 +53,6 @@ fun quizCreation(changePage: (String) -> Unit, accountId: String, noteId: String
             questionType = quizForm.questionType,
             totalQuestions = quizForm.totalQuestions,
             totalMarks = quizForm.totalMarks,
-            hint = quizForm.hint,
-            time = quizForm.time,
             noteId = noteId
         )
         quizController.generateQuiz(quiz)
