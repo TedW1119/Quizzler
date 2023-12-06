@@ -1,7 +1,7 @@
 # Abnormally Distributed
 
-## Wiki
-Click [here](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Project-Proposal) to view our wiki page!
+## Welcome
+Welcome to Quizzler by _Abnormally Distributed_. This is a desktop application where users can generate quiz questions by simply uploading a file! Learn more by clicking through the links below.
 
 ## Main Sections
 **Project:** [Project](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Final-Submission/Project)
@@ -13,6 +13,18 @@ Click [here](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Proje
 **Design:** [Design](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Final-Submission/Design)
 
 **Discussion:** [Discussion](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Final-Submission/Discussion)
+
+**Final Submission Folder:** [Final Submission Folder](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Final-Submission)
+
+## Additional Sections
+**Database Models:** [Database Models](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Project-Proposal)
+
+**OpenAI Viability:** [OpenAI Viability](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Project-Proposal/OpenAI-Viability)
+
+**Proposal:** [Proposal](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Project-Proposal/Proposal)
+
+**Project Proposal Folder:** [Project Proposal Folder](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Project-Proposal)
+
 
 ## Installation Details
 **Instructions and Walkthrough Guide:** [Instructions and Walkthrough Guide](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Final-Submission/Installation-and-Walkthrough-Guide) - Includes Docker Setup
