@@ -11,8 +11,8 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import util.DataModels
 import util.DataModels.Account
-import util.DataModels.Quiz
 import util.DataModels.Note
+import util.DataModels.Quiz
 
 
 fun Application.configureRouting() {
@@ -85,7 +85,6 @@ fun Application.accountRouting(accountController: AccountController) {
         post("/account") {
             try {
                 val account = call.receive<Account>()
-                print(account)
                 accountController.upsertAccount(account)
                 call.response.status(HttpStatusCode.Created)
             } catch (e: ContentTransformationException) {
