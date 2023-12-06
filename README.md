@@ -15,7 +15,8 @@ Click [here](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Proje
 **Discussion:** [Discussion](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Final-Submission/Discussion)
 
 ## Installation Details
-**Instructions and Walkthrough Guide:** [Instructions and Walkthrough Guide](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Final-Submission/Installation-and-Walkthrough-Guide)
+**Instructions and Walkthrough Guide:** [Instructions and Walkthrough Guide](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Final-Submission/Installation-and-Walkthrough-Guide) - Includes Docker Setup
+
 **Software Releases:**
 - [Release v1.0](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/blob/main/releases/v1.0-release-notes.md?ref_type=heads) \
 Application Code Development
@@ -27,4 +28,4 @@ Server Code development, OpenAI Integration
 Clean-up UI, PDF Parsing, Difficulty Setting, Unit Testing
 
 ## Source code
-**Source Code:** https://git.uwaterloo.ca/k57hu/abnormally-distributed
+**Source Code:** [Source Code](https://git.uwaterloo.ca/k57hu/abnormally-distributed)
