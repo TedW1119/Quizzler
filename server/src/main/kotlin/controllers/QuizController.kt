@@ -8,6 +8,10 @@ import com.aallam.openai.client.OpenAI
 import kotlinx.serialization.json.Json
 import org.bson.types.ObjectId
 import services.QuizService
+import util.Constants.OPENAI_MAX_TOKENS
+import util.Constants.OPENAI_MODEL_ID
+import util.Constants.OPENAI_TEMPERATURE
+import util.Constants.OPENAI_TOKEN
 import util.DataModels.Question
 import util.DataModels.Quiz
 
@@ -36,7 +40,7 @@ class QuizController {
             else -> "20"
         }
 
-        val openAI = OpenAI("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")
+        val openAI = OpenAI(OPENAI_TOKEN)
 
         // Attempt to Generate Question:
         try {
@@ -50,11 +54,11 @@ class QuizController {
                 "MCQ" -> {
                     // Complete Request Using OpenAPI
                     val completionRequest = CompletionRequest(
-                        model = ModelId("text-davinci-003"),
+                        model = ModelId(OPENAI_MODEL_ID),
                         prompt = "Given the sample text: \n" + text + "\n \n" +
                                 "Now, create ${quiz.totalQuestions} multiple choice question(s). Store them in a JSON of the following type: data class Question( val _id: String, val question: String, val type: String, val options: List<String>, val hint: String,  marks: Int, val answer: String ) Only worry about the question, options, and answer fields, and keep the question and options as concise as possible (less than $difficultyLength words each). Follow this example for ${quiz.totalQuestions} multiple choice questions, but an example of one multiple choice question stored in the JSON (remember to append the JSON correctly for more than one question) is:" + """ [ { "_id": "1", "question": "What is the primary role of an operating system?", "type": "MCQ", "options": ["Run applications", "Manage hardware resources", "Create virtual CPUs", "Handle file operations"], "hint": "", "marks": 0, "answer": "Manage hardware resources" } ] $difficultyPrompt""",
-                        maxTokens = 600,
-                        temperature = 0.02
+                        maxTokens = OPENAI_MAX_TOKENS,
+                        temperature = OPENAI_TEMPERATURE
                     )
                     // Complete and Decode from String
                     val completion: TextCompletion = openAI.completion(completionRequest)
@@ -66,11 +70,11 @@ class QuizController {
 
                     // Complete Request Using OpenAPI
                     val completionRequest = CompletionRequest(
-                        model = ModelId("text-davinci-003"),
+                        model = ModelId(OPENAI_MODEL_ID),
                         prompt = "Given the sample text: \n" + text + "\n \n" +
                                 "Now, create ${quiz.totalQuestions} true and false question(s). Store them in a JSON of the following type: data class Question( val _id: String, val question: String, val type: String, val options: List<String>, val hint: String,  marks: Int, val answer: String ) Only worry about the question, options, and answer fields, and keep the question and options as concise as possible (less than $difficultyLength words each). Follow this example for ${quiz.totalQuestions} true and false questions, but an example of one true and false question stored in the JSON (remember to append the JSON correctly for more than one question) is:" + """ [ { "_id": "1", "question": "An operating system is responsible for running applications.", "type": "T/F", "options": ["True", "False"], "hint": "", "marks": 0, "answer": "False" } ] $difficultyPrompt""",
-                        maxTokens = 600,
-                        temperature = 0.02
+                        maxTokens = OPENAI_MAX_TOKENS,
+                        temperature = OPENAI_TEMPERATURE
                     )
                     // Complete and Decode from String
                     val completion: TextCompletion = openAI.completion(completionRequest)
@@ -81,11 +85,11 @@ class QuizController {
 
                     // Complete Request Using OpenAPI
                     val completionRequest = CompletionRequest(
-                        model = ModelId("text-davinci-003"),
+                        model = ModelId(OPENAI_MODEL_ID),
                         prompt = "Given the sample text: \n" + text + "\n \n" +
                                 "Now, create a total ${quiz.totalQuestions} multiple choice and true/false question(s). Store them in a JSON of the following type: data class Question( val _id: String, val question: String, val type: String, val options: List<String>, val hint: String,  marks: Int, val answer: String ) Only worry about the question, options, and answer fields, and keep the question and options as concise as possible (less than $difficultyLength words each). Follow this example for ${quiz.totalQuestions} multiple choice and true/false questions, but an example of one multiple choice question and one true/false question stored in the JSON together (remember to append the JSON correctly for more than one question) is:" + """ [ { "_id": "1", "question": "An operating system is responsible for running applications.", "type": "T/F", "options": ["True", "False"], "hint": "", "marks": 0, "answer": "False" }, { "_id": "2", "question": "An operating system is responsible for running applications.", "type": "T/F", "options": ["True", "False"], "hint": "", "marks": 0, "answer": "False" } ] Remember, that was an example of the structure, I need a JSON of length ${quiz.totalQuestions} and I need a mix of both types of questions. $difficultyPrompt""",
-                        maxTokens = 600,
-                        temperature = 0.02
+                        maxTokens = OPENAI_MAX_TOKENS,
+                        temperature = OPENAI_TEMPERATURE
                     )
                     // Complete and Decode from String
                     val completion: TextCompletion = openAI.completion(completionRequest)
