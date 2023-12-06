@@ -1,6 +1,6 @@
 # Abnormally Distributed
 
-## Welcome! 🖐️
+## Welcome! 👋
 Welcome to Quizzler by _Abnormally Distributed_. This is a desktop application where users can generate quiz questions by simply uploading a file! Learn more by clicking through the links below.
 
 ## Main Sections
