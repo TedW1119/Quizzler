@@ -6,8 +6,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.window.Window
 import androidx.compose.ui.window.application
 import pages.*
-import pages.account.accountCreation
-import pages.account.accountSettings
 import java.awt.Dimension
 
 fun main() = application {
