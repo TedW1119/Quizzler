@@ -39,5 +39,5 @@ Server Code development, OpenAI Integration
 - [Release v1.3](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/blob/main/releases/v1.3-release-notes.md?ref_type=heads) \
 Clean-up UI, PDF Parsing, Difficulty Setting, Unit Testing
 
-## Source code
+## Source Code
 **Source Code:** [Source Code](https://git.uwaterloo.ca/k57hu/abnormally-distributed)
