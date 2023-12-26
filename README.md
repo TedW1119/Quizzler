@@ -3,6 +3,12 @@
 ## Welcome! 👋
 Welcome to Quizzler by _Abnormally Distributed_. This is a desktop application where users can generate quiz questions by simply uploading a file! Learn more by clicking through the links below.
 
+Here are some sample images on what the app looks like:
+![alt text](./application/src/main/resources/landing.jpg)
+![alt text](./application/src/main/resources/quiz_creation.jpg)
+![alt text](./application/src/main/resources/quiz_taking.jpg)
+![alt text](./application/src/main/resources/quiz_result.jpg)
+
 ## Main Sections
 - [**Project**](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Final-Submission/Project)
 - [**Meeting Minutes**](https://git.uwaterloo.ca/k57hu/abnormally-distributed/-/wikis/Final-Submission/Meeting-Minutes)
